@@ -79,7 +79,7 @@ make -j
 
 (Reported by Innovus)
 
-## Output file format for CircuitOps users
+## Output file format
 ```
 <instance name> <library cell name>
 <instance name> <library cell name>
