@@ -1,0 +1,6 @@
+[submodule "CircuitOps"]
+	path = CircuitOps
+	url = https://github.com/NVlabs/CircuitOps/
+[submodule "OpenROAD"]
+	path = OpenROAD
+	url = https://github.com/The-OpenROAD-Project/OpenROAD
