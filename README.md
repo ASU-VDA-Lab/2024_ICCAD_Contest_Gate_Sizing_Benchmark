@@ -66,38 +66,27 @@ make -j
 ## Benchmark Statistics
 |        design        |   gate count   |    WNS (ps)   |    TNS (ps)   |worst slew (ps)|max load C (fF)| total leakage (pW)|
 |:--------------------:|:--------------:|--------------:|--------------:|--------------:|--------------:|--------------:|
-|        aes_256       | 276222| | | | | |
-|       ariane133      | 135062| | | | | |
-|       ariane136      | 130655| | | | | |
 | NV_NVDLA_partition_a | 38846| -14052.56| -38039276| 37158.04| 6824.19| |
-| NV_NVDLA_partition_p | 78703| | | | | |
-| NV_NVDLA_partition_o | 270590| | | | | |
 | NV_NVDLA_partition_m | 23513| -4169.26| -1144537.12| 6715.75| 1688.59| |
-| NV_NVDLA_partition_c | 201321| | | | | |
-|   mempool_tile_wrap  | 160431| | | | | |
 
 (Reported by OpenSTA)
 
 ## Benchmark Statistics
 |        design        |   gate count   |    WNS (ps)   |    TNS (ps)   |
 |:--------------------:|:--------------:|--------------:|--------------:|
-|        aes_256       | 276222| -2053| -5438900|
-|       ariane133      | 135062| -7431| -40983700|
-|       ariane136      | 130655| -6266| -51656100|
 | NV_NVDLA_partition_a | 38846| -2636| -6326200|
-| NV_NVDLA_partition_p | 78703| -2786| -23360200|
-| NV_NVDLA_partition_o | 270590| -6329| -77691000|
 | NV_NVDLA_partition_m | 23513| -967| -209730|
-| NV_NVDLA_partition_c | 201321| -5569| -36327300|
-|   mempool_tile_wrap  | 160431| -94784| -75668200|
-
 
 (Reported by Innovus)
 
 ## Output file format for CircuitOps users
 ```
-instance name,library cell name
-instance name,library cell name
-instance name,library cell name
+instance name library cell name
+instance name library cell name
+instance name library cell name
 ...
 ```
+
+## Q&A
+Q1: Does the cell library provide the area information?
+A1: Yes, you can find the area information in the lib files.

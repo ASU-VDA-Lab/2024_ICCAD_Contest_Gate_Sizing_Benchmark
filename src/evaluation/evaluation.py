@@ -40,7 +40,7 @@ def swap_libcell(filePath: str, design: Design):
   changeTypeDict = defaultdict()
   with open(filePath, "r") as file:
     for line in file:
-      line = line.split(",")
+      line = line.split()
       changeTypeDict[line[0]] = line[1]
 
   # Start examine the correctness of the result
