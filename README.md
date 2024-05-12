@@ -81,9 +81,9 @@ make -j
 
 ## Output file format for CircuitOps users
 ```
-instance name library cell name
-instance name library cell name
-instance name library cell name
+<instance name> <library cell name>
+<instance name> <library cell name>
+<instance name> <library cell name>
 ...
 ```
 
