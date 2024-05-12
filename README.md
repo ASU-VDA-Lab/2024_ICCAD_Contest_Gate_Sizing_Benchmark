@@ -1,5 +1,5 @@
 # ICCAD_Contest_Gate_Sizing_Benchmark
-This GitHub repository has the public benchmarks for the 2024 ICCAD CAD Contest Problem C, and the hidden benchmarks will be released after the contest. This contest aims to explore the state-of-the-art algorithms for gate sizing to drive academic research to generate scalable gate-sizing algorithms and have people get hands-on with [OpenROAD](https://github.com/The-OpenROAD-Project/OpenROAD)'s Python API and Nvidia's [CircuitOps](https://github.com/NVlabs/CircuitOps/tree/main) data representation format for ML-EDA or GPU-accelerated EDA research.
+This GitHub repository has the public benchmarks for the 2024 ICCAD CAD Contest Problem C, and the hidden benchmarks will be released after the contest. This contest aims to explore the state-of-the-art algorithms for gate sizing to drive academic research to generate scalable gate-sizing algorithms and have people get hands-on with [OpenROAD's Python API](https://github.com/The-OpenROAD-Project/OpenROAD) and Nvidia's [CircuitOps](https://github.com/NVlabs/CircuitOps/tree/main) data representation format for ML-EDA or GPU-accelerated EDA research.
 
 ## Table of Content
   - [*IR_Tables*](./IR_Tables): Design data in CircuitOps format.
