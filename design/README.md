@@ -4,10 +4,10 @@ This directory contains contest benchmarks, including sdc, spef, gate-level netl
 bash unzip.sh
 ```
 ## Benchmark Statistics
-|        design        |   gate count   |    WNS (ps)   |    TNS (ps)   |worst slew (ps)|max load C (fF)| total leakage (pW)|
+|        design        |   gate count   |    WNS (ps)   |    TNS (ps)   |worst slew (ps)|max load C (fF)| total leakage (uW)|
 |:--------------------:|:--------------:|--------------:|--------------:|--------------:|--------------:|--------------:|
-| NV_NVDLA_partition_a | 38846| -14052.56| -38039276| 37158.04| 6824.19| |
-| NV_NVDLA_partition_m | 23513| -4169.26| -1144537.12| 6715.75| 1688.59| |
+| NV_NVDLA_partition_a | 38846| -14052.56| -38039276| 37158.04| 6824.19| 3.1119671539785176|
+| NV_NVDLA_partition_m | 23513| -4169.26| -1144537.12| 6715.75| 1688.59| 2.2363948726554853|
 
 (Reported by OpenSTA)
 
