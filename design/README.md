@@ -1,0 +1,21 @@
+# Benchmark files
+This directory contains contest benchmarks, including sdc, spef, gate-level netlist in Verilog format, and post-route def. Run the following command to unzip all files:
+```
+bash unzip.sh
+```
+## Benchmark Statistics
+|        design        |   gate count   |    WNS (ps)   |    TNS (ps)   |worst slew (ps)|max load C (fF)| total leakage (pW)|
+|:--------------------:|:--------------:|--------------:|--------------:|--------------:|--------------:|--------------:|
+| NV_NVDLA_partition_a | 38846| -14052.56| -38039276| 37158.04| 6824.19| |
+| NV_NVDLA_partition_m | 23513| -4169.26| -1144537.12| 6715.75| 1688.59| |
+
+(Reported by OpenSTA)
+
+## Benchmark Statistics
+|        design        |   gate count   |    WNS (ps)   |    TNS (ps)   |
+|:--------------------:|:--------------:|--------------:|--------------:|
+| NV_NVDLA_partition_a | 38846| -2636| -6326200|
+| NV_NVDLA_partition_m | 23513| -967| -209730|
+
+(Reported by Innovus)
+
