@@ -1,6 +1,6 @@
 for dir in */; do
   cd "$dir" || exit
-  bzip2 -z *
+  bzip2 -d *
   cd ../
 done
 
