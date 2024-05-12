@@ -6,7 +6,7 @@ Run the following command to run the example script to build the LPG using IR Ta
 ```
 python3 CircuitOps_example.py
 ```
-For more details, please find [*NVlabs/CircuitOps/src/python*](https://github.com/NVlabs/CircuitOps/tree/main/src/python) and [*ASU-VDA-Lab/ASP-DAC24-Tutorial*](https://github.com/ASU-VDA-Lab/ASP-DAC24-Tutorial/tree/main).
+For more examples, please find [*NVlabs/CircuitOps/src/python*](https://github.com/NVlabs/CircuitOps/tree/main/src/python) and [*ASU-VDA-Lab/ASP-DAC24-Tutorial*](https://github.com/ASU-VDA-Lab/ASP-DAC24-Tutorial/tree/main).
 
 ## OpenROAD Python API
 (Make sure to build OpenROAD locally first or use the provided Dockerfile to build the environment)
@@ -14,4 +14,4 @@ Run the following command to run the example script:
 ```
 ../../OpenROAD/build/src/openroad -python OpenROAD_example.py
 ```
-For more details, please find [*ASU-VDA-Lab/ASP-DAC24-Tutorial*](https://github.com/ASU-VDA-Lab/ASP-DAC24-Tutorial/tree/main).
+For more examples, please find [*ASU-VDA-Lab/ASP-DAC24-Tutorial*](https://github.com/ASU-VDA-Lab/ASP-DAC24-Tutorial/tree/main).
