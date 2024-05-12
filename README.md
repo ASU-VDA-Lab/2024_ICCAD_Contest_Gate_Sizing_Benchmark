@@ -6,9 +6,9 @@ This GitHub repository has the public benchmarks for the 2024 ICCAD CAD Contest 
   - [*design*](./design): Design netlist, post-routed DEF, SDC, and SPEF file.
   - [*platform/ASAP7*](./platform/ASAP7): ASAP7 cell library for the designs.
   - [*src*](./src)
-    - [*example*](./example): Example scripts showing how to use OpenROAD Python API and CircuitOps LPG.
-    - [*CircuitOps_script*](./CircuitOps_script): CircuitOps scripts to generate new IR Tables.
-    - [*evaluation*](./evaluation): Evaluation scripts for the contest and the evaluation method for users of the OpenROAD Python API.
+    - [*example*](./src/example): Example scripts showing how to use OpenROAD Python API and CircuitOps LPG.
+    - [*CircuitOps_script*](./src/CircuitOps_script): CircuitOps scripts to generate new IR Tables.
+    - [*evaluation*](./src/evaluation): Evaluation scripts for the contest and the evaluation method for users of the OpenROAD Python API.
 ## Materials for using OpenROAD's Python API and Nvidia's CircuitOps
   - R. Liang, A. Agnesina, G. Pradipta, V. A. Chhabria and H. Ren, "Invited Paper: CircuitOps: An ML Infrastructure Enabling Generative AI for VLSI Circuit Optimization," in ICCAD, 2023
     - [CircuitOps: An ML Infrastructure Enabling Generative AI for VLSI Circuit Optimization](https://ieeexplore.ieee.org/abstract/document/10323611)
