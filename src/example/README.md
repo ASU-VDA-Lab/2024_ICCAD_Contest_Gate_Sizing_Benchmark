@@ -2,7 +2,7 @@
 This directory contains sample Python scripts for using [*OpenROAD Python APIs*](https://github.com/The-OpenROAD-Project/OpenROAD/tree/master) and [*Nvidia's CircuitOps*](https://github.com/NVlabs/CircuitOps/tree/main).
 
 ## Nvidia's CircuitOps example
-Run the following command to run the example script:
+Run the following command to run the example script to build the LPG using IR Tables:
 ```
 python3 CircuitOps_example.py
 ```
