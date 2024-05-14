@@ -196,8 +196,6 @@ close $cell_pin_outfile
 close $cell_net_outfile
 close $pin_outfile
 
-puts "+++++++++======================"
-
 set net_outfile [open $net_file w]
 set header {net_name net_route_length net_steiner_length fanout total_cap net_cap net_coupling net_res}
 puts $net_outfile [join $header ","]
