@@ -56,6 +56,7 @@ def ICCAD_evaluation(filePath: str, design: Design, timing: Timing):
   if check_validity(filePath, design, timing):
     if swap_libcell(filePath, design):
       WNS, maxSlew, maxCap, totalLeakagePower = 0, 0, 0, 0
+      # Penalties are subject to change
       WNSPenalty, maxSlewPenalty, maxCapPenalty = 1, 1, 1
 
       capLimit = 0
@@ -64,27 +65,27 @@ def ICCAD_evaluation(filePath: str, design: Design, timing: Timing):
       design.evalTclString("report_wns > evaluation_temp.txt")
       with open ("evaluation_temp.txt", "r") as file:
         for line in file:
-          WNS = float(line.split()[1])
+          WNS = float(line.split()[1]) / 1000
       design.evalTclString("report_check_types -max_cap > evaluation_temp.txt")
       with open ("evaluation_temp.txt", "r") as file:
         for line in file:
           if len(line.split()) != 0:
             maxCap = line
-        maxCap = float(maxCap.split()[2])
+        maxCap = float(maxCap.split()[2]) / 1000
       design.evalTclString("report_check_types -max_slew > evaluation_temp.txt")
       with open ("evaluation_temp.txt", "r") as file:
         for line in file:
           if len(line.split()) != 0:
             maxSlew = line
             capLimit = line
-        maxSlew = float(maxSlew.split()[2])
-        capLimit = float(capLimit.split()[1])
+        maxSlew = float(maxSlew.split()[2]) / 1000
+        capLimit = float(capLimit.split()[1]) / 1000
       os.remove("evaluation_temp.txt")
       # We only have one corner in this contest
       corner = timing.getCorners()[0]
       for inst in design.getBlock().getInsts():
         totalLeakagePower += timing.staticPower(inst, corner)
-      
+      totalLeakagePower *= 1000000
       # Adjust penalties
       WNSPenalty = 0 if WNS >= 0.0 else WNSPenalty
       maxSlewPenalty = 0 if 320 >= maxSlew else maxSlewPenalty
@@ -93,8 +94,8 @@ def ICCAD_evaluation(filePath: str, design: Design, timing: Timing):
       # Compute score
       score = totalLeakagePower + WNSPenalty * abs(WNS) + maxSlewPenalty * abs(maxSlew) + maxCapPenalty * abs(maxCap)
       print("===================================================")
-      print("WNS: %f ps, worst Slew: %f ps"%(WNS, maxSlew))
-      print("worst load capacitance: %f fF, total leakage power: %f W"%(maxCap, totalLeakagePower)) 
+      print("WNS: %f ns, worst Slew: %f ns"%(WNS, maxSlew))
+      print("worst load capacitance: %f pF, total leakage power: %f uW"%(maxCap, totalLeakagePower)) 
       print("Score: %f"%score)
       print("===================================================")
 
