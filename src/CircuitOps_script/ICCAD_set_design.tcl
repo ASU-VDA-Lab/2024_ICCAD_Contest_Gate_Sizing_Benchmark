@@ -35,7 +35,6 @@ set LIB_FILES [glob ${PLATFORM_DIR}/lib/*.lib]
 set SDC_FILE "${DESIGN_DIR}/${DESIGN_NAME}.sdc"
 set NETLIST_FILE  "${DESIGN_DIR}/${DESIGN_NAME}.v"
 set SPEF_FILE "${DESIGN_DIR}/${DESIGN_NAME}.spef"
-puts $SPEF_FILE
 
 set cell_file "${OUTPUT_DIR}/cell_properties.csv"
 set libcell_file "${OUTPUT_DIR}/libcell_properties.csv"
