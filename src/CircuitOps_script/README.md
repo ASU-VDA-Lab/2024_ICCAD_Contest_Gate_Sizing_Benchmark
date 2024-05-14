@@ -3,7 +3,7 @@ This directory contains [*OpenROAD*](https://github.com/The-OpenROAD-Project/Ope
 
 ## Run the script
 Make sure you have OpenROAD built locally.
-Please modify the path in [*ICCAD_set_design.tcl*](./ICCAD_set_design.tcl) before running the script
+Please modify the relative path and the "DESIGN_NAME" variable in [*ICCAD_set_design.tcl*](./ICCAD_set_design.tcl) before running the script
 Run the following command to generate the new IR Tables:
 ```
 ../../OpenROAD/build/src/openroad ICCAD_generate_tables.tcl
