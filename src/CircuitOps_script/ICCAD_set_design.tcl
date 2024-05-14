@@ -14,7 +14,7 @@
 # limitations under the License.
 
 ### SET DESIGN ###
-set DESIGN_NAME ariane133
+set DESIGN_NAME NV_NVDLA_partition_m
 
 ### SET PLATFORM ###
 set PLATFORM ASAP7
