@@ -337,5 +337,5 @@ foreach fix_load_inst $fix_load_insts {
   ::sta::delete_instance $fix_load_inst
 }
 
-#exit
+exit
 
