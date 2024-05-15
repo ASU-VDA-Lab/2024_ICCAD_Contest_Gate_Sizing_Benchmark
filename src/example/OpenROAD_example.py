@@ -143,7 +143,45 @@ for equiv_cell in equiv_cells:
   print(equiv_cell.getName())
 # Perform gate sizing
 inst.swapMaster(equiv_cells[0])
-# Timing information will be updated in the background
+
+########################################################
+# Timing information will be updated in the background #
+########################################################
+print("*****get pin's timing information after gate sizing*****")
+for pin in pins[12345:12348]:
+  # Typically we should use the following if statement to filter out the VDD/VSS pins
+  # Since we do not have routed VDD and VSS net in this contest, we can use None instead
+  #if pin.getNet().getSigType() != 'POWER' and pin.getNet().getSigType() != 'GROUND':
+  if pin.getNet() != None:
+    pin_tran = timing.getPinSlew(pin)
+    pin_slack = min(timing.getPinSlack(pin, timing.Fall, timing.Max), timing.getPinSlack(pin, timing.Rise, timing.Max))
+    pin_rise_arr = timing.getPinArrival(pin, timing.Rise)
+    pin_fall_arr = timing.getPinArrival(pin, timing.Fall)
+    if pin.isInputSignal():
+      input_pin_cap = timing.getPortCap(pin, corner, timing.Max)
+    else:
+      input_pin_cap = -1
+    # This gives the sum of the loading pins' capacitance
+    output_load_pin_cap = get_output_load_pin_cap(pin, corner, timing)
+    # This will add net's capacitance to the output load capacitance
+    output_load_cap = timing.getNetCap(pin.getNet(), corner, timing.Max) if pin.isOutputSignal() else -1
+    print("""Pin name: %s
+Pin transition time: %.25f
+Pin slack: %.25f
+Pin rising arrival time: %.25f
+Pin falling arrival time: %.25f
+Pin's input capacitance: %.25f
+Pin's output pin capacitance: %.25f
+Pin's output capacitance: %.25f
+-------------------------------"""%(
+    design.getITermName(pin),
+    pin_tran,
+    pin_slack,
+    pin_rise_arr,
+    pin_fall_arr,
+    input_pin_cap,
+    output_load_pin_cap,
+    output_load_cap))
 
 #######################################################################
 # How to use the name of the instance to get the instance from OpenDB #
