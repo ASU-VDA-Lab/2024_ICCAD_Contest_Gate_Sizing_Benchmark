@@ -5,7 +5,7 @@ This directory contains sample Python scripts for using [*OpenROAD Python APIs*]
 Run the following command to run the example script to build the Labeled Property Graph (LPG) using Intermediate Representation (IR) Tables:
 
 - Add the path to the directory containing IR Tables with the "--path_IR" flag.
-- Add the path to the LPG creation function with the "--path_LPG_gen_func" flag. The function is defined [*here*](https://github.com/NVlabs/CircuitOps/tree/main/src/python)
+- Add the path to the directory containing the LPG creation function with the "--path_LPG_gen_func" flag. The function is defined [*here*](https://github.com/NVlabs/CircuitOps/blob/main/src/python/generate_LPG_from_tables.py)
 ```
 python3 CircuitOps_example.py --path_IR ../../../IR_Tables/NV_NVDLA_partition_m/ --path_LPG_gen_func ../../../CircuitOps/src/python/
 ```
