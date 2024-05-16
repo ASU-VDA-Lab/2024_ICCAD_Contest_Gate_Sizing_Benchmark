@@ -78,6 +78,12 @@ make -j
 ...
 ```
 
+## Intermediate file format
+```
+<pinName or portName>,<maxcap>,<maxtran>,<pin_tran>,<pin_slack>,<pin_rise_arr>,<pin_fall_arr>,<input_pin_cap>
+<instanceName>,<staticPower>,<dynamicPower>
+```
+
 ## Q&A
 - Q1: Does the cell library provide the area information?
 - A1: Yes, you can find the area information in the lib files.
