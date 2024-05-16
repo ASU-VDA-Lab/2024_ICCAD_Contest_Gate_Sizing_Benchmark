@@ -67,8 +67,6 @@ if __name__ == "__main__":
   #################################################
   parser = argparse.ArgumentParser(description='path of your CircuitOps clone and the file of generate_LPG_from_tables.py')
   parser.add_argument('--path_IR', type = Path, default='../../../IR_Tables/NV_NVDLA_partition_m/', action = 'store')
-  parser.add_argument('--path_CircuitOps', type = Path, default='../../../CircuitOps/', action = 'store')
-  parser.add_argument('--use_pd', default = False, action = 'store_true')
   parser.add_argument('--path_LPG_gen_func', type = Path, default='../../../CircuitOps/src/python/', action = 'store')
   pyargs = parser.parse_args()
   
@@ -80,8 +78,7 @@ if __name__ == "__main__":
   ######################
   LPG, pin_df, cell_df, net_df, fo4_df, pin_pin_df, cell_pin_df, \
     net_pin_df, net_cell_df, cell_cell_df, edge_df, v_type, e_type \
-    = generate_LPG_from_tables(data_root = f"{pyargs.path_IR}/") if not pyargs.use_pd else \
-      generate_LPG_from_tables(data_root = f"{pyargs.path_CircuitOps}/", use_python_api = pyargs.use_pd, write_table = False)
+    = generate_LPG_from_tables(data_root = f"{pyargs.path_IR}/")
 
   sys.path.remove(str(pyargs.path_LPG_gen_func))
   ### get dimensions

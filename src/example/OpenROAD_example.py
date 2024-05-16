@@ -31,12 +31,17 @@ from openroad import Tech, Design, Timing
 import os, odb
 from pathlib import Path
 from OpenROAD_helper import *
+import argparse
 
+parser = argparse.ArgumentParser(description = "parsing the name of the benchmark")
+parser.add_argument("--design_name", type = str, default = "NV_NVDLA_partition_m")
+pyargs = parser.parse_args()
 ##############################################
 # Load the design using OpenROAD Python APIs #
 ##############################################
-print("*****Load design, lib, lef, and sdc*****")
-tech, design = load_design("NV_NVDLA_partition_m", False)
+print("*********************Load design, lib, lef, and sdc********************")
+print("*****Please go through the code to see the detailed implementation*****")
+tech, design = load_design(pyargs.design_name, False)
 timing = Timing(design)
 db = ord.get_db()
 corner = timing.getCorners()[0]
@@ -45,7 +50,8 @@ block = design.getBlock()
 #########################################
 # Get pins, insts, and nets from OpenDB #
 #########################################
-print("*****Get pins, insts, and nets from OpenDB*****")
+print("*******************Get pins, insts, and nets from OpenDB***************")
+print("*****Please go through the code to see the detailed implementation*****")
 pins = block.getITerms()
 insts = block.getInsts()
 nets = block.getNets()
@@ -65,7 +71,8 @@ for net in nets:
 #########################
 # Get all library cells #
 #########################
-print("*****Get all library cells*****")
+print("************************Get all library cells**************************")
+print("*****Please go through the code to see the detailed implementation*****")
 libs = db.getLibs()
 for lib in libs:
   for master in lib.getMasters():
@@ -76,6 +83,7 @@ for lib in libs:
 # How to get timing information (pin slew, pin slack, pin arrival time) #
 #########################################################################
 print("*****get pin's timing information*****")
+# Use the name of the instance to find the instance
 inst = block.findInst("FE_RC_3272_0")
 pins = inst.getITerms()
 for pin in pins:
