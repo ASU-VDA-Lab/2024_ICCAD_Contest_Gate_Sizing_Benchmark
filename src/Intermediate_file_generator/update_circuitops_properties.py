@@ -64,7 +64,7 @@ def updated_dataframe_generate(filePath: str, design: str):
       
       block = design.getBlock()
       insts = block.getInsts()
-
+      
       for inst in insts:
         pins = inst.getITerms()
         for pin in pins:
