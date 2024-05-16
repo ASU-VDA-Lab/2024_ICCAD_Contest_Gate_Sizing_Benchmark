@@ -1,15 +1,16 @@
 # ICCAD_Contest_Gate_Sizing_Benchmark
-This GitHub repository has the public benchmarks for the 2024 ICCAD CAD Contest Problem C, and the hidden benchmarks will be released after the contest. This contest aims to explore the state-of-the-art algorithms for gate sizing to drive academic research to generate scalable gate-sizing algorithms and have people get hands-on with [*OpenROAD's Python API*](https://github.com/The-OpenROAD-Project/OpenROAD) and [*Nvidia's CircuitOps*](https://github.com/NVlabs/CircuitOps/) data representation format for ML-EDA or GPU-accelerated EDA research. OpenROAD's Python APIs allow users to execute EDA tools with just a few lines of Python code and to access the EDA tool database directly through Python APIs, bypassing traditional file I/O. CircuitOps provides an ML-friendly data infrastructure that uses Labeled Property Graphs (LPGs) backed by Intermediate Representation (IR) Tables to create datasets for ML-EDA applications. The Python-compatible LPG minimizes the developmental effort required for ML-EDA research.
+This GitHub repository has the public benchmarks for the 2024 ICCAD CAD Contest Problem C for logic gate sizing, and the hidden benchmarks will be released after the contest. This contest primary goal is to explore the state-of-the-art algorithms for gate sizing to drive academic research to generate scalable gate-sizing algorithms. The secondary goal is to allow the use of a recently developed ML EDA research infrastructure which leverages [*OpenROAD's Python API*](https://github.com/The-OpenROAD-Project/OpenROAD) and [*Nvidia's CircuitOps*](https://github.com/NVlabs/CircuitOps/) data representation format for ML-EDA or GPU-accelerated EDA research. OpenROAD's Python APIs allow users to execute EDA tools with just a few lines of Python code and to access the EDA tool database directly through Python APIs, bypassing traditional file I/O. CircuitOps provides an ML-friendly data infrastructure that uses Labeled Property Graphs (LPGs) backed by Intermediate Representation (IR) Tables to create datasets for ML-EDA applications. The Python-compatible LPG minimizes the developmental effort required for ML-EDA research.
 
 
 ## Table of Content
-  - [*IR_Tables*](./IR_Tables): Design data in CircuitOps IR Table format.
-  - [*design*](./design): Design netlist, post-routed DEF, SDC, and SPEF file.
+  - [*IR_Tables*](./IR_Tables): Design data in CircuitOps IR tables format.
+  - [*design*](./design): Design netlist, post-routed DEF, SDC, and post-routed SPEF file.
   - [*platform/ASAP7*](./platform/ASAP7): ASAP7 cell library for the designs.
   - [*src*](./src)
     - [*example*](./src/example): Example scripts showing how to use OpenROAD Python API and CircuitOps LPG.
-    - [*CircuitOps_script*](./src/CircuitOps_script): Python scripts to generate the intermediate files.
+    - [*CircuitOps_script*](./src/CircuitOps_script): Python scripts to generate the intermediate files and updated timing values and capacitance values using OpenROAD after gate sizing. 
     - [*evaluation*](./src/evaluation): Evaluation scripts for the contest and the evaluation method for users of the OpenROAD Python API.
+    
 ## Materials for using OpenROAD's Python API and Nvidia's CircuitOps
   - R. Liang, A. Agnesina, G. Pradipta, V. A. Chhabria and H. Ren, "Invited Paper: CircuitOps: An ML Infrastructure Enabling Generative AI for VLSI Circuit Optimization," in ICCAD, 2023
     - [CircuitOps: An ML Infrastructure Enabling Generative AI for VLSI Circuit Optimization](https://ieeexplore.ieee.org/abstract/document/10323611)
