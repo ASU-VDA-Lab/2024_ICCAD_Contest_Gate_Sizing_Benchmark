@@ -28,7 +28,7 @@
 #OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 import openroad as ord
 from openroad import Tech, Design
-import os
+import os, odb
 from pathlib import Path
 
 def load_design(design_name, verilog = True):
@@ -64,7 +64,17 @@ def load_design(design_name, verilog = True):
   design.evalTclString("read_spef %s"%sdcFile)
   design.evalTclString("source ../../platform/ASAP7/setRC.tcl")
   design.evalTclString("set_propagated_clock [all_clocks]")
-
+  
+  # Global connect
+  VDDNet = design.getBlock().findNet("VDD")
+  VDDNet.setSpecial()
+  VDDNet.setSigType("POWER")
+  VSSNet = design.getBlock().findNet("VSS")
+  VSSNet.setSpecial()
+  VSSNet.setSigType("GROUND")
+  design.getBlock().addGlobalConnect(None, ".*", "VDD", VDDNet, True)
+  design.getBlock().addGlobalConnect(None, ".*", "VSS", VSSNet, True)
+  odb.dbBlock.globalConnect(ord.get_db_block())
   return tech, design
 
 #################################################

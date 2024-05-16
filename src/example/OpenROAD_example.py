@@ -76,24 +76,26 @@ for lib in libs:
 # How to get timing information (pin slew, pin slack, pin arrival time) #
 #########################################################################
 print("*****get pin's timing information*****")
-for pin in pins[12345:12348]:
-  # Typically we should use the following if statement to filter out the VDD/VSS pins
-  # Since we do not have routed VDD and VSS net in this contest, we can use None instead
-  #if pin.getNet().getSigType() != 'POWER' and pin.getNet().getSigType() != 'GROUND':
+inst = block.findInst("FE_RC_3272_0")
+pins = inst.getITerms()
+for pin in pins:
+  # Filter out pins connecting to constant 1 or 0
   if pin.getNet() != None:
-    pin_tran = timing.getPinSlew(pin)
-    pin_slack = min(timing.getPinSlack(pin, timing.Fall, timing.Max), timing.getPinSlack(pin, timing.Rise, timing.Max))
-    pin_rise_arr = timing.getPinArrival(pin, timing.Rise)
-    pin_fall_arr = timing.getPinArrival(pin, timing.Fall)
-    if pin.isInputSignal():
-      input_pin_cap = timing.getPortCap(pin, corner, timing.Max)
-    else:
-      input_pin_cap = -1
-    # This gives the sum of the loading pins' capacitance
-    output_load_pin_cap = get_output_load_pin_cap(pin, corner, timing)
-    # This will add net's capacitance to the output load capacitance
-    output_load_cap = timing.getNetCap(pin.getNet(), corner, timing.Max) if pin.isOutputSignal() else -1
-    print("""Pin name: %s
+    # Filter out the VDD/VSS pin
+    if pin.getNet().getSigType() != 'POWER' and pin.getNet().getSigType() != 'GROUND':
+      pin_tran = timing.getPinSlew(pin)
+      pin_slack = min(timing.getPinSlack(pin, timing.Fall, timing.Max), timing.getPinSlack(pin, timing.Rise, timing.Max))
+      pin_rise_arr = timing.getPinArrival(pin, timing.Rise)
+      pin_fall_arr = timing.getPinArrival(pin, timing.Fall)
+      if pin.isInputSignal():
+        input_pin_cap = timing.getPortCap(pin, corner, timing.Max)
+      else:
+        input_pin_cap = -1
+      # This gives the sum of the loading pins' capacitance
+      output_load_pin_cap = get_output_load_pin_cap(pin, corner, timing)
+      # This will add net's capacitance to the output load capacitance
+      output_load_cap = timing.getNetCap(pin.getNet(), corner, timing.Max) if pin.isOutputSignal() else -1
+      print("""Pin name: %s
 Pin transition time: %.25f
 Pin slack: %.25f
 Pin rising arrival time: %.25f
@@ -102,23 +104,22 @@ Pin's input capacitance: %.25f
 Pin's output pin capacitance: %.25f
 Pin's output capacitance: %.25f
 -------------------------------"""%(
-    design.getITermName(pin),
-    pin_tran,
-    pin_slack,
-    pin_rise_arr,
-    pin_fall_arr,
-    input_pin_cap,
-    output_load_pin_cap,
-    output_load_cap))
+      design.getITermName(pin),
+      pin_tran,
+      pin_slack,
+      pin_rise_arr,
+      pin_fall_arr,
+      input_pin_cap,
+      output_load_pin_cap,
+      output_load_cap))
     
 #####################################################
 # How to get power information (static and dynamic) #
 #####################################################
 print("*****get instance's power information*****")
-for inst in insts[12345:12348]:
-  leakage = timing.staticPower(inst, corner)
-  internal_and_switching = timing.dynamicPower(inst, corner)
-  print("""Instance name: %s
+leakage = timing.staticPower(inst, corner)
+internal_and_switching = timing.dynamicPower(inst, corner)
+print("""Instance name: %s
 Leakage power: %.25f
 Internal power + switching power: %.25f
 -------------------------------"""%(
@@ -132,7 +133,7 @@ Internal power + switching power: %.25f
 print("*****How to perform gate sizing*****")
 timing.makeEquivCells()
 # First pick an instance
-inst = insts[0]
+inst = block.findInst("FE_RC_3272_0")
 # Then get the library cell information
 inst_master = inst.getMaster()
 print("-----------Reference library cell-----------")
@@ -148,24 +149,24 @@ inst.swapMaster(equiv_cells[0])
 # Timing information will be updated in the background #
 ########################################################
 print("*****get pin's timing information after gate sizing*****")
-for pin in pins[12345:12348]:
-  # Typically we should use the following if statement to filter out the VDD/VSS pins
-  # Since we do not have routed VDD and VSS net in this contest, we can use None instead
-  #if pin.getNet().getSigType() != 'POWER' and pin.getNet().getSigType() != 'GROUND':
+for pin in pins:
+  # Filter out pins connecting to constant 1 or 0
   if pin.getNet() != None:
-    pin_tran = timing.getPinSlew(pin)
-    pin_slack = min(timing.getPinSlack(pin, timing.Fall, timing.Max), timing.getPinSlack(pin, timing.Rise, timing.Max))
-    pin_rise_arr = timing.getPinArrival(pin, timing.Rise)
-    pin_fall_arr = timing.getPinArrival(pin, timing.Fall)
-    if pin.isInputSignal():
-      input_pin_cap = timing.getPortCap(pin, corner, timing.Max)
-    else:
-      input_pin_cap = -1
-    # This gives the sum of the loading pins' capacitance
-    output_load_pin_cap = get_output_load_pin_cap(pin, corner, timing)
-    # This will add net's capacitance to the output load capacitance
-    output_load_cap = timing.getNetCap(pin.getNet(), corner, timing.Max) if pin.isOutputSignal() else -1
-    print("""Pin name: %s
+    # Filter out the VDD/VSS pin
+    if pin.getNet().getSigType() != 'POWER' and pin.getNet().getSigType() != 'GROUND':
+      pin_tran = timing.getPinSlew(pin)
+      pin_slack = min(timing.getPinSlack(pin, timing.Fall, timing.Max), timing.getPinSlack(pin, timing.Rise, timing.Max))
+      pin_rise_arr = timing.getPinArrival(pin, timing.Rise)
+      pin_fall_arr = timing.getPinArrival(pin, timing.Fall)
+      if pin.isInputSignal():
+        input_pin_cap = timing.getPortCap(pin, corner, timing.Max)
+      else:
+        input_pin_cap = -1
+      # This gives the sum of the loading pins' capacitance
+      output_load_pin_cap = get_output_load_pin_cap(pin, corner, timing)
+      # This will add net's capacitance to the output load capacitance
+      output_load_cap = timing.getNetCap(pin.getNet(), corner, timing.Max) if pin.isOutputSignal() else -1
+      print("""Pin name: %s
 Pin transition time: %.25f
 Pin slack: %.25f
 Pin rising arrival time: %.25f
@@ -174,14 +175,16 @@ Pin's input capacitance: %.25f
 Pin's output pin capacitance: %.25f
 Pin's output capacitance: %.25f
 -------------------------------"""%(
-    design.getITermName(pin),
-    pin_tran,
-    pin_slack,
-    pin_rise_arr,
-    pin_fall_arr,
-    input_pin_cap,
-    output_load_pin_cap,
-    output_load_cap))
+      design.getITermName(pin),
+      pin_tran,
+      pin_slack,
+      pin_rise_arr,
+      pin_fall_arr,
+      input_pin_cap,
+      output_load_pin_cap,
+      output_load_cap))
+
+
 
 #######################################################################
 # How to use the name of the instance to get the instance from OpenDB #
