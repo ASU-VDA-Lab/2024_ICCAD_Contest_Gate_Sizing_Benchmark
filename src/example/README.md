@@ -14,7 +14,7 @@ For more examples, please find [*NVlabs/CircuitOps/src/python*](https://github.c
 ## OpenROAD Python API
 (Make sure to build OpenROAD locally first or use the provided Dockerfile to build the environment)
 Run the following command to execute the example script:
-- Replace <The name of the benchmark> with the name of the provided benchmark. The default benchmark is NV_NVDLA_partition_m if the "--design_name" flag is not added.
+- Replace "The name of the benchmark" with the name of the provided benchmark. The default benchmark is NV_NVDLA_partition_m if the "--design_name" flag is not added.
 ```
 ../../OpenROAD/build/src/openroad -python OpenROAD_example.py --design_name <The name of the benchmark>
 ```
