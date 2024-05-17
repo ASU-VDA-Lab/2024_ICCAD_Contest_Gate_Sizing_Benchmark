@@ -84,6 +84,7 @@ make -j
 <pinName or portName>,<maxcap>,<maxtran>,<pin_tran>,<pin_slack>,<pin_rise_arr>,<pin_fall_arr>,<input_pin_cap>,<output_pin_cap>
 <instanceName>,<staticPower>,<dynamicPower>
 ```
+("output_pin_cap" is the sum of the sink pins' capacitance. You can get it by subtracting the "total_cap" with "net_cap" from the net properties IR Table.)
 
 ## Q&A
 - Q1: Does the cell library provide the area information?
