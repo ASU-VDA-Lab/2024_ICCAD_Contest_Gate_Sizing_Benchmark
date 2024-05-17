@@ -35,10 +35,11 @@ from pathlib import Path
 import os, argparse, sys
 sys.path.append("../example/")
 sys.path.append("../evaluation/")
-from OpenROAD_helper import load_design
+from OpenROAD_helper import load_design, get_output_load_pin_cap
 from check_validity import check_validity
 from evaluation import swap_libcell
 import pandas as pd
+
 
 def updated_dataframe_generate(filePath: str, design: str):
   tech, design = load_design(pyargs.design_name, False)
@@ -54,7 +55,8 @@ def updated_dataframe_generate(filePath: str, design: str):
         "pin_slack": [],
         "pin_rise_arr": [],
         "pin_fall_arr": [],
-        "input_pin_cap": []
+        "input_pin_cap": [],
+        "output_pin_cap": []
         })
       cell_table = pd.DataFrame({
         "cell_name": [],
@@ -78,7 +80,8 @@ def updated_dataframe_generate(filePath: str, design: str):
                 "pin_slack": [min(timing.getPinSlack(pin, timing.Fall, timing.Max), timing.getPinSlack(pin, timing.Rise, timing.Max))],
                 "pin_rise_arr": [timing.getPinArrival(pin, timing.Rise)],
                 "pin_fall_arr": [timing.getPinArrival(pin, timing.Fall)],
-                "input_pin_cap": [timing.getPortCap(pin, corner, timing.Max) if pin.isInputSignal() else "None"]
+                "input_pin_cap": [timing.getPortCap(pin, corner, timing.Max) if pin.isInputSignal() else "None"],
+                "output_pin_cap": [get_output_load_pin_cap(pin, corner, timing) if pin.isOutputSignal() else "None"]
                 })
               pin_table = pd.concat([pin_table, pin_entry], ignore_index = True)
         cell_entry = pd.DataFrame({
@@ -95,11 +98,12 @@ if __name__ == "__main__":
   parser.add_argument("--file_path", type = Path, default="./file", action = "store")
   parser.add_argument("--design_name", type = str, default="NaN", action = "store")
   parser.add_argument("--dump_csv", default = False, action = "store_true")
+  parser.add_argument("--dump_path", type = str, default="./", action = "store")
   pyargs = parser.parse_args()
   
   cell_df, pin_df = updated_dataframe_generate(pyargs.file_path, pyargs.design_name)
   
   if pyargs.dump_csv:
     if cell_df is not None and pin_df is not None:
-      cell_df.to_csv("cell_properties_update.csv", index = False)
-      pin_df.to_csv("pin_properties_update.csv", index = False)
+      cell_df.to_csv("%scell_properties_update.csv"%pyargs.dump_path, index = False)
+      pin_df.to_csv("%spin_properties_update.csv"%pyargs.dump_path, index = False)

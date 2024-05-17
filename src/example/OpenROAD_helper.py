@@ -82,7 +82,6 @@ def load_design(design_name, verilog = True):
 #################################################
 def get_output_load_pin_cap(pin, corner, timing):
   # first check if the pin is an output pin
-  print(pin.getNet().getName())
   if pin.isOutputSignal():
     output_load_pin_cap = 0
     # loop through all pins connected to this pin (including this pin)
