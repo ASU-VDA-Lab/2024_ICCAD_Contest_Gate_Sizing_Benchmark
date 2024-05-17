@@ -8,7 +8,7 @@ This GitHub repository has the public benchmarks for the 2024 ICCAD CAD Contest 
   - [*platform/ASAP7*](./platform/ASAP7): ASAP7 cell library for the designs.
   - [*src*](./src)
     - [*example*](./src/example): Example scripts showing how to use OpenROAD Python API and CircuitOps LPG.
-    - [*CircuitOps_script*](./src/CircuitOps_script): Python scripts to generate the intermediate files and updated timing values and capacitance values using OpenROAD after gate sizing. 
+    - [*intermediate_file_generator*](./src/intermediate_file_generator): Python scripts to generate the intermediate files containing the updated timing values and capacitance values using OpenROAD after gate sizing. 
     - [*evaluation*](./src/evaluation): Evaluation scripts for the contest and the evaluation method for users of the OpenROAD Python API.
     
 ## Materials for using OpenROAD's Python API and Nvidia's CircuitOps
