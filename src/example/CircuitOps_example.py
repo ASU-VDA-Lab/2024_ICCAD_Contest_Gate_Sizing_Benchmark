@@ -66,7 +66,7 @@ if __name__ == "__main__":
   #parse args and import functions from CircuitOps#
   #################################################
   parser = argparse.ArgumentParser(description='path of your CircuitOps clone and the file of generate_LPG_from_tables.py')
-  parser.add_argument('--path_IR', type = Path, default='../../../IR_Tables/NV_NVDLA_partition_m/', action = 'store')
+  parser.add_argument('--path_IR', type = Path, default='../../IR_Tables/NV_NVDLA_partition_m/', action = 'store')
   parser.add_argument('--path_LPG_gen_func', type = Path, default='../../../CircuitOps/src/python/', action = 'store')
   pyargs = parser.parse_args()
   

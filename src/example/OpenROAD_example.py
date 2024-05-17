@@ -79,12 +79,26 @@ for lib in libs:
     libcell_name = master.getName()
     libcell_area = master.getHeight() * master.getWidth()
 
+#######################################################################
+# How to use the name of the instance to get the instance from OpenDB #
+#######################################################################
+inst = block.findInst("fopt62728")
+print("-------------The instance we get-------------")
+print(inst.getName())
+
+###############################################################################
+# How to use the name of the library cell to get the library cell from OpenDB #
+###############################################################################
+master = db.findMaster("INVxp67_ASAP7_75t_R")
+print("-----------The library cell we get-----------")
+print(master.getName())
+
 #########################################################################
 # How to get timing information (pin slew, pin slack, pin arrival time) #
 #########################################################################
 print("*****get pin's timing information*****")
 # Use the name of the instance to find the instance
-inst = block.findInst("FE_RC_3272_0")
+inst = block.findInst("fopt62728")
 pins = inst.getITerms()
 for pin in pins:
   # Filter out pins connecting to constant 1 or 0
@@ -141,7 +155,7 @@ Internal power + switching power: %.25f
 print("*****How to perform gate sizing*****")
 timing.makeEquivCells()
 # First pick an instance
-inst = block.findInst("FE_RC_3272_0")
+inst = block.findInst("fopt62728")
 # Then get the library cell information
 inst_master = inst.getMaster()
 print("-----------Reference library cell-----------")
@@ -191,22 +205,6 @@ Pin's output capacitance: %.25f
       input_pin_cap,
       output_load_pin_cap,
       output_load_cap))
-
-
-
-#######################################################################
-# How to use the name of the instance to get the instance from OpenDB #
-#######################################################################
-inst = block.findInst("FE_OCPC2243_FE_DBTN11_u_NV_NVDLA_cmac_u_core_u_mac_2_mul_136_55_n_2")
-print("-------------The instance we get-------------")
-print(inst.getName())
-
-###############################################################################
-# How to use the name of the library cell to get the library cell from OpenDB #
-###############################################################################
-master = db.findMaster("INVxp67_ASAP7_75t_R")
-print("-----------The library cell we get-----------")
-print(master.getName()) 
 
 ###########################################
 # How to dump the updated design DEF file #
