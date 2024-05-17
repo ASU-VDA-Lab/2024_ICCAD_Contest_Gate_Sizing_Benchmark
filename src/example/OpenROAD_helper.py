@@ -31,8 +31,7 @@ from openroad import Tech, Design
 import os, odb
 from pathlib import Path
 
-def load_design(design_name, verilog = True):
-  # Set file path
+def load_design(design_name, verilog = False):
   tech = Tech()
   libDir = Path("../../platform/ASAP7/lib/")
   lefDir = Path("../../platform/ASAP7/lef/")
@@ -57,13 +56,13 @@ def load_design(design_name, verilog = True):
     defFile = "%s/%s.def"%(designDir.as_posix(), design_name)
     design.readDef(defFile)
 
-  # Read the SDC file and set the clocks
+  # Read the SDC file, SPEF file, and set the clocks
+  spefFile = "%s/%s.spef"%(designDir.as_posix(), design_name)
+  design.evalTclString("read_spef %s"%spefFile)
   sdcFile = "%s/%s.sdc"%(designDir.as_posix(), design_name)
   design.evalTclString("read_sdc %s"%sdcFile)
-  spefFile = "%s/%s.spef"%(designDir.as_posix(), design_name)
-  design.evalTclString("read_spef %s"%sdcFile)
-  design.evalTclString("source ../../platform/ASAP7/setRC.tcl")
   design.evalTclString("set_propagated_clock [all_clocks]")
+  design.evalTclString("source ../../platform/ASAP7/setRC.tcl")
   
   # Global connect
   VDDNet = design.getBlock().findNet("VDD")
@@ -74,7 +73,7 @@ def load_design(design_name, verilog = True):
   VSSNet.setSigType("GROUND")
   design.getBlock().addGlobalConnect(None, ".*", "VDD", VDDNet, True)
   design.getBlock().addGlobalConnect(None, ".*", "VSS", VSSNet, True)
-  odb.dbBlock.globalConnect(ord.get_db_block())
+  design.getBlock().globalConnect()
   return tech, design
 
 #################################################
