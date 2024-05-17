@@ -11,7 +11,7 @@ Units are in farad (F), Ohm (Ω), and second (s)
   - cell_name: name of the cell.
   - is_seq: 1 if is flip-flop, otherwise 0.
   - is_macro: 1 if is macro, otherwise 0.
-  - is_in_clk: 
+  - is_in_clk: whether one of its pins is connected to the clock signal
   - x0: lower-left location of the cell.
   - y0: lower-let location of the cell.
   - x1: upper-right location of the cell.
@@ -25,13 +25,13 @@ Units are in farad (F), Ohm (Ω), and second (s)
   - pin_name: name of the pin.
   - x: location of the pin on the x-axis.
   - y: location of the pin on the y-axis.
-  - is_in_clk: 
+  - is_in_clk: whether the pin is connected to the clock signal
   - is_port: 
   - is_startpoint: 1 if the pin is the driver pin (reported by OpenSTA).
   - is_endpoint: 1 if the pin is the sink pin (reported by OpenSTA).
   - dir: 0 if it's an input of a cell, 1 if it's an output of a cell.
-  - maxcap: max load cap.
-  - maxtran: max slew in ps.
+  - maxcap: capacitance constraint of the pin
+  - maxtran: transition time constraint of the pin
   - num_reachable_endpoint: amount of connecting sink pins (reported by OpenSTA).
   - cell_name: name of the cell.
   - net_name: name of the connecting net.
@@ -51,7 +51,7 @@ Units are in farad (F), Ohm (Ω), and second (s)
   - net_res: wire resistance.
 - Libcell Properties:
   - libcell_name: name of the library cell.
-  - func_id: library cells with the same func_id indicate that they are the same type of cell.
+  - func_id: The functional ID of a libcell is a unique identifier assigned based on its functionality. Libcells that perform the same function will share the same functional ID, while those with different functionalities will have distinct IDs.
   - libcell_area: area of the library cell.
   - worst_input_cap: maximum capacitance value across all input pins.
   - libcell_leakage: leakage power.
