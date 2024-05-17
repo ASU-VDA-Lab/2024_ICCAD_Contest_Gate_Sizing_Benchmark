@@ -81,7 +81,7 @@ make -j
 
 ## Intermediate file format
 ```
-<pinName or portName>,<maxcap>,<maxtran>,<pin_tran>,<pin_slack>,<pin_rise_arr>,<pin_fall_arr>,<input_pin_cap>
+<pinName or portName>,<maxcap>,<maxtran>,<pin_tran>,<pin_slack>,<pin_rise_arr>,<pin_fall_arr>,<input_pin_cap>,<output_pin_cap>
 <instanceName>,<staticPower>,<dynamicPower>
 ```
 
