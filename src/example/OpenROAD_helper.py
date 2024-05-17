@@ -61,7 +61,6 @@ def load_design(design_name, verilog = False):
   design.evalTclString("read_spef %s"%spefFile)
   sdcFile = "%s/%s.sdc"%(designDir.as_posix(), design_name)
   design.evalTclString("read_sdc %s"%sdcFile)
-  design.evalTclString("set_propagated_clock [all_clocks]")
   design.evalTclString("source ../../platform/ASAP7/setRC.tcl")
   
   # Global connect
