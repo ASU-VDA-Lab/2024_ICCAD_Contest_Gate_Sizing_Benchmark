@@ -61,7 +61,6 @@ def updated_dataframe_generate(filePath: str, design: str):
       cell_table = pd.DataFrame({
         "cell_name": [],
         "cell_static_power": [],
-        "cell_dynamic_power": []
         })
       
       block = design.getBlock()
@@ -87,7 +86,6 @@ def updated_dataframe_generate(filePath: str, design: str):
         cell_entry = pd.DataFrame({
           "cell_name": [inst.getName()],
           "cell_static_power": [timing.staticPower(inst, corner)],
-          "cell_dynamic_power": [timing.dynamicPower(inst, corner)]
           })
         cell_table = pd.concat([cell_table, cell_entry], ignore_index = True)
       return cell_table, pin_table
