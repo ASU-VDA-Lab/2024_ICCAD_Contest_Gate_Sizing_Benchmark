@@ -46,23 +46,23 @@ def load_design(design_name, verilog = False):
   for lefFile in lefFiles:
     tech.readLef(lefFile.as_posix())
   design = Design(tech)
-  
+
   # Read design files
   if verilog:
-    verilogFile = "%s/%s.v"%(designDir.as_posix(), design_name)
+    verilogFile = "%s/%s.v.gz"%(designDir.as_posix(), design_name)
     design.readVerilog(verilogFile)
     design.link(design_name)
   else:
-    defFile = "%s/%s.def"%(designDir.as_posix(), design_name)
+    defFile = "%s/%s.def.gz"%(designDir.as_posix(), design_name)
     design.readDef(defFile)
 
   # Read the SDC file, SPEF file, and set the clocks
-  spefFile = "%s/%s.spef"%(designDir.as_posix(), design_name)
+  spefFile = "%s/%s.spef.gz"%(designDir.as_posix(), design_name)
   design.evalTclString("read_spef %s"%spefFile)
-  sdcFile = "%s/%s.sdc"%(designDir.as_posix(), design_name)
+  sdcFile = "%s/%s.sdc.gz"%(designDir.as_posix(), design_name)
   design.evalTclString("read_sdc %s"%sdcFile)
   design.evalTclString("source ../../platform/ASAP7/setRC.tcl")
-  
+
   # Global connect
   VDDNet = design.getBlock().findNet("VDD")
   VDDNet.setSpecial()
