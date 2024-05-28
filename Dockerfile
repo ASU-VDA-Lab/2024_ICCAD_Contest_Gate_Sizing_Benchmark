@@ -22,19 +22,19 @@ RUN apt-get install -y python3-graph-tool
 RUN apt-get install -y vim
 RUN apt-get install -y python3-pip
 
-RUN pip install torch
+RUN pip install --no-cache-dir torch
 RUN pip install dgl
 RUN pip install pycairo
 RUN pip install pandas
 RUN pip install scikit-learn
 
 WORKDIR /app
-RUN git clone --recursive https://github.com/ASU-VDA-Lab/2024_CAD_Contest_Gate_Sizing_Benchmark.git
+RUN git clone --recursive https://github.com/ASU-VDA-Lab/2024_ICCAD_Contest_Gate_Sizing_Benchmark.git
 
-WORKDIR /app/2024_CAD_Contest_Gate_Sizing_Benchmark/OpenROAD/
+WORKDIR /app/2024_ICCAD_Contest_Gate_Sizing_Benchmark/OpenROAD/
 RUN ./etc/DependencyInstaller.sh
 RUN mkdir build
-WORKDIR /app/2024_CAD_Contest_Gate_Sizing_Benchmark/OpenROAD/build
+WORKDIR /app/2024_ICCAD_Contest_Gate_Sizing_Benchmark/OpenROAD/build
 RUN cmake ..
 RUN make -j 6
 
