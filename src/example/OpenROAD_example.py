@@ -117,23 +117,34 @@ for pin in pins:
       output_load_pin_cap = get_output_load_pin_cap(pin, corner, timing)
       # This will add net's capacitance to the output load capacitance
       output_load_cap = timing.getNetCap(pin.getNet(), corner, timing.Max) if pin.isOutputSignal() else -1
+      
+      
+      # We have to use MTerm (library cell's pin, ITerms are instances' pins) to get the constraints 
+      # such as max load cap and max slew (pin transition time)
+      library_cell = [MTerm for MTerm in pin.getInst().getMaster().getMTerms() if (pin.getInst().getName() + "/" + MTerm.getName()) == pin.getName()][0]
+      pin_tran_limit = timing.getMaxSlewLimit(library_cell)
+      output_load_cap_limit = timing.getMaxCapLimit(library_cell)
       print("""Pin name: %s
 Pin transition time: %.25f
+Pin's maximum available transition time: %.25f
 Pin slack: %.25f
 Pin rising arrival time: %.25f
 Pin falling arrival time: %.25f
 Pin's input capacitance: %.25f
 Pin's output pin capacitance: %.25f
 Pin's output capacitance: %.25f
+Pin's maximum available output capacitance: %.25f
 -------------------------------"""%(
       design.getITermName(pin),
+      pin_tran_limit,
       pin_tran,
       pin_slack,
       pin_rise_arr,
       pin_fall_arr,
       input_pin_cap,
       output_load_pin_cap,
-      output_load_cap))
+      output_load_cap,
+      output_load_cap_limit))
     
 #####################################################
 # How to get power information (static and dynamic) #
