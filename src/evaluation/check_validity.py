@@ -46,7 +46,7 @@ def check_validity(file_path: str, design: Design, timing: Timing):
   for instName, libcellName in changeTypeDict.items():
     inst = block.findInst(instName)
     if inst == None:
-      print("Error: Instance \"%s\" not found.")
+      print("Error: Instance \"%s\" not found."%instName)
       return False
     correctMasters = timing.equivCells(inst.getMaster())
     correct = False
