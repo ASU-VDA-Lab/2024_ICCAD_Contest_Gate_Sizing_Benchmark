@@ -82,14 +82,14 @@ for lib in libs:
 #######################################################################
 # How to use the name of the instance to get the instance from OpenDB #
 #######################################################################
-inst = block.findInst("fopt62728")
+inst = block.findInst("FE_RC_2729_0")
 print("-------------The instance we get-------------")
 print(inst.getName())
 
 ###############################################################################
 # How to use the name of the library cell to get the library cell from OpenDB #
 ###############################################################################
-master = db.findMaster("INVxp67_ASAP7_75t_R")
+master = db.findMaster("AOI22xp5_ASAP7_75t_R")
 print("-----------The library cell we get-----------")
 print(master.getName())
 
@@ -98,7 +98,7 @@ print(master.getName())
 #########################################################################
 print("*****get pin's timing information*****")
 # Use the name of the instance to find the instance
-inst = block.findInst("fopt62728")
+inst = block.findInst("FE_RC_2729_0")
 pins = inst.getITerms()
 for pin in pins:
   # Filter out pins connecting to constant 1 or 0
@@ -166,7 +166,7 @@ Internal power + switching power: %.25f
 print("*****How to perform gate sizing*****")
 timing.makeEquivCells()
 # First pick an instance
-inst = block.findInst("fopt62728")
+inst = block.findInst("FE_RC_2729_0")
 # Then get the library cell information
 inst_master = inst.getMaster()
 print("-----------Reference library cell-----------")
