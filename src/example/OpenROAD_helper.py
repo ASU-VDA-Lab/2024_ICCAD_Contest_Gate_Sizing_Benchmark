@@ -62,17 +62,22 @@ def load_design(design_name, verilog = False):
   sdcFile = "%s/%s.sdc"%(designDir.as_posix(), design_name)
   design.evalTclString("read_sdc %s"%sdcFile)
   design.evalTclString("source ../../platform/ASAP7/setRC.tcl")
-
+  
   # Global connect
   VDDNet = design.getBlock().findNet("VDD")
+  if VDDNet is None:
+    VDDNet = odb.dbNet_create(design.getBlock(), "VDD")
   VDDNet.setSpecial()
   VDDNet.setSigType("POWER")
   VSSNet = design.getBlock().findNet("VSS")
+  if VSSNet is None:
+    VSSNet = odb.dbNet_create(design.getBlock(), "VSS")
   VSSNet.setSpecial()
   VSSNet.setSigType("GROUND")
   design.getBlock().addGlobalConnect(None, ".*", "VDD", VDDNet, True)
   design.getBlock().addGlobalConnect(None, ".*", "VSS", VSSNet, True)
   design.getBlock().globalConnect()
+
   return tech, design
 
 #################################################
