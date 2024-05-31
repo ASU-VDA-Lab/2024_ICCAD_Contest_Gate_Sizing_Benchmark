@@ -1,5 +1,5 @@
 # Benchmark files
-This directory contains contest benchmarks, including sdc, spef, gate-level netlist in Verilog format, and post-route def. Run the following command to unzip all files:
+This directory contains contest benchmarks, including sdc, spef, gate-level netlist in Verilog format, post-route def, and reference .size output file. Run the following command to unzip all files:
 ```
 bash unzip.sh
 ```

@@ -4,7 +4,7 @@ This GitHub repository has the public benchmarks for the 2024 ICCAD CAD Contest 
 
 ## Table of Content
   - [*IR_Tables*](./IR_Tables): Design data in CircuitOps IR tables format.
-  - [*design*](./design): Design netlist, post-routed DEF, SDC, and post-routed SPEF file.
+  - [*design*](./design): Design netlist, post-routed DEF, SDC, post-routed SPEF file, and reference .size output file.
   - [*platform/ASAP7*](./platform/ASAP7): ASAP7 cell library for the designs.
   - [*src*](./src)
     - [*example*](./src/example): Example scripts showing how to use OpenROAD Python API and CircuitOps LPG.
