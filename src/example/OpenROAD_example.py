@@ -121,9 +121,9 @@ for pin in pins:
       
       # We have to use MTerm (library cell's pin, ITerms are instances' pins) to get the constraints 
       # such as max load cap and max slew (pin transition time)
-      library_cell = [MTerm for MTerm in pin.getInst().getMaster().getMTerms() if (pin.getInst().getName() + "/" + MTerm.getName()) == pin.getName()][0]
-      pin_tran_limit = timing.getMaxSlewLimit(library_cell)
-      output_load_cap_limit = timing.getMaxCapLimit(library_cell)
+      library_cell_pin = [MTerm for MTerm in pin.getInst().getMaster().getMTerms() if (pin.getInst().getName() + "/" + MTerm.getName()) == pin.getName()][0]
+      pin_tran_limit = timing.getMaxSlewLimit(library_cell_pin)
+      output_load_cap_limit = timing.getMaxCapLimit(library_cell_pin)
       print("""Pin name: %s
 Pin transition time: %.25f
 Pin's maximum available transition time: %.25f

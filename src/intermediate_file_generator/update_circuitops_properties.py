@@ -47,47 +47,67 @@ def updated_dataframe_generate(filePath: str, design: str):
   corner = timing.getCorners()[0]
   if check_validity(filePath, design, timing):
     if swap_libcell(filePath, design):
-      pin_table = pd.DataFrame({
-        "pin_name": [],
-        "maxcap": [],
-        "maxtran": [],
-        "pin_tran": [],
-        "pin_slack": [],
-        "pin_rise_arr": [],
-        "pin_fall_arr": [],
-        "input_pin_cap": [],
-        "output_pin_cap": []
-        })
-      cell_table = pd.DataFrame({
-        "cell_name": [],
-        "cell_static_power": [],
-        })
+      # Legalization
+      site = design.getBlock().getRows()[0].getSite()
+      max_disp_x = int(design.micronToDBU(0.1) / site.getWidth())
+      max_disp_y = int(design.micronToDBU(0.1) / site.getHeight())
+      design.getOpendp().detailedPlacement(max_disp_x, max_disp_y, "", False)
+      # Global routing
+      signal_low_layer = design.getTech().getDB().getTech().findLayer("M1").getRoutingLevel()
+      signal_high_layer = design.getTech().getDB().getTech().findLayer("M7").getRoutingLevel()
+      clk_low_layer = design.getTech().getDB().getTech().findLayer("M1").getRoutingLevel()
+      clk_high_layer = design.getTech().getDB().getTech().findLayer("M7").getRoutingLevel()
+      grt = design.getGlobalRouter()
+      grt.clear()
+      grt.setAllowCongestion(True)
+      grt.setMinRoutingLayer(signal_low_layer)
+      grt.setMaxRoutingLayer(signal_high_layer)
+      grt.setMinLayerForClock(clk_low_layer)
+      grt.setMaxLayerForClock(clk_high_layer)
+      grt.setAdjustment(0.5)
+      grt.setVerbose(False)
+      grt.globalRoute(False)
+      design.evalTclString("estimate_parasitics -global_routing")
       
       block = design.getBlock()
       insts = block.getInsts()
+      
+      pin_name, maxcap, maxtran, pin_tran, pin_slack = [], [], [], [], []
+      pin_rise_arr, pin_fall_arr, input_pin_cap, output_pin_cap = [], [], [], []
+      cell_name, cell_static_power = [], []
       
       for inst in insts:
         pins = inst.getITerms()
         for pin in pins:
           if pin.getNet() != None:
             if pin.getNet().getSigType() != 'POWER' and pin.getNet().getSigType() != 'GROUND':
-              pin_entry = pd.DataFrame({
-                "pin_name": [design.getITermName(pin)],
-                "maxcap": [-1],
-                "maxtran": [-1],
-                "pin_tran": [timing.getPinSlew(pin)],
-                "pin_slack": [min(timing.getPinSlack(pin, timing.Fall, timing.Max), timing.getPinSlack(pin, timing.Rise, timing.Max))],
-                "pin_rise_arr": [timing.getPinArrival(pin, timing.Rise)],
-                "pin_fall_arr": [timing.getPinArrival(pin, timing.Fall)],
-                "input_pin_cap": [timing.getPortCap(pin, corner, timing.Max) if pin.isInputSignal() else "None"],
-                "output_pin_cap": [get_output_load_pin_cap(pin, corner, timing) if pin.isOutputSignal() else "None"]
-                })
-              pin_table = pd.concat([pin_table, pin_entry], ignore_index = True)
-        cell_entry = pd.DataFrame({
-          "cell_name": [inst.getName()],
-          "cell_static_power": [timing.staticPower(inst, corner)],
-          })
-        cell_table = pd.concat([cell_table, cell_entry], ignore_index = True)
+              library_cell_pin = [MTerm for MTerm in pin.getInst().getMaster().getMTerms() if (pin.getInst().getName() + "/" + MTerm.getName()) == pin.getName()][0]
+              pin_name.append(design.getITermName(pin))
+              maxcap.append(timing.getMaxCapLimit(library_cell_pin))
+              maxtran.append(timing.getMaxSlewLimit(library_cell_pin))              
+              pin_tran.append(timing.getPinSlew(pin))
+              pin_slack.append(min(timing.getPinSlack(pin, timing.Fall, timing.Max), timing.getPinSlack(pin, timing.Rise, timing.Max)))
+              pin_rise_arr.append(timing.getPinArrival(pin, timing.Rise))
+              pin_fall_arr.append(timing.getPinArrival(pin, timing.Fall))
+              input_pin_cap.append(timing.getPortCap(pin, corner, timing.Max) if pin.isInputSignal() else "-1")
+              output_pin_cap.append(get_output_load_pin_cap(pin, corner, timing) if pin.isOutputSignal() else "-1")
+        cell_name.append(inst.getName())
+        cell_static_power.append(timing.staticPower(inst, corner))
+      pin_table = pd.DataFrame({
+        "pin_name": pin_name,
+        "maxcap": maxcap,
+        "maxtran": maxtran,
+        "pin_tran": pin_tran,
+        "pin_slack": pin_slack,
+        "pin_rise_arr": pin_rise_arr,
+        "pin_fall_arr": pin_fall_arr,
+        "input_pin_cap": input_pin_cap,
+        "output_pin_cap": output_pin_cap
+        })
+      cell_table = pd.DataFrame({
+        "cell_name": cell_name,
+        "cell_static_power": cell_static_power,
+        })
       return cell_table, pin_table
   return None, None
 
