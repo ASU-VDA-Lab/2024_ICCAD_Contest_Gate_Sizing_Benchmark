@@ -82,7 +82,7 @@ for lib in libs:
 #######################################################################
 # How to use the name of the instance to get the instance from OpenDB #
 #######################################################################
-inst = block.findInst("FE_RC_2729_0")
+inst = block.findInst("u_NV_NVDLA_cmac_u_core_u_mac_1_mul_124_55_g84957")
 print("-------------The instance we get-------------")
 print(inst.getName())
 
@@ -98,7 +98,7 @@ print(master.getName())
 #########################################################################
 print("*****get pin's timing information*****")
 # Use the name of the instance to find the instance
-inst = block.findInst("FE_RC_2729_0")
+inst = block.findInst("u_NV_NVDLA_cmac_u_core_u_mac_1_mul_124_55_g84957")
 pins = inst.getITerms()
 for pin in pins:
   # Filter out pins connecting to constant 1 or 0
@@ -166,7 +166,7 @@ Internal power + switching power: %.25f
 print("*****How to perform gate sizing*****")
 timing.makeEquivCells()
 # First pick an instance
-inst = block.findInst("FE_RC_2729_0")
+inst = block.findInst("u_NV_NVDLA_cmac_u_core_u_mac_1_mul_124_55_g84957")
 # Then get the library cell information
 inst_master = inst.getMaster()
 print("-----------Reference library cell-----------")
@@ -177,6 +177,34 @@ for equiv_cell in equiv_cells:
   print(equiv_cell.getName())
 # Perform gate sizing
 inst.swapMaster(equiv_cells[0])
+
+#####################################
+# Perform Legalization after sizing #
+#####################################
+site = design.getBlock().getRows()[0].getSite()
+max_disp_x = int(design.micronToDBU(0.1) / site.getWidth())
+max_disp_y = int(design.micronToDBU(0.1) / site.getHeight())
+design.getOpendp().detailedPlacement(max_disp_x, max_disp_y, "", False)
+
+##############################################
+# Run Global Route After Legalization and    #
+# Get The Updated RC Info. for Timing Update #
+##############################################
+signal_low_layer = design.getTech().getDB().getTech().findLayer("M1").getRoutingLevel()
+signal_high_layer = design.getTech().getDB().getTech().findLayer("M7").getRoutingLevel()
+clk_low_layer = design.getTech().getDB().getTech().findLayer("M1").getRoutingLevel()
+clk_high_layer = design.getTech().getDB().getTech().findLayer("M7").getRoutingLevel()
+grt = design.getGlobalRouter()
+grt.clear()
+grt.setAllowCongestion(True)
+grt.setMinRoutingLayer(signal_low_layer)
+grt.setMaxRoutingLayer(signal_high_layer)
+grt.setMinLayerForClock(clk_low_layer)
+grt.setMaxLayerForClock(clk_high_layer)
+grt.setAdjustment(0.5)
+grt.setVerbose(False)
+grt.globalRoute(False)
+design.evalTclString("estimate_parasitics -global_routing")
 
 ########################################################
 # Timing information will be updated in the background #

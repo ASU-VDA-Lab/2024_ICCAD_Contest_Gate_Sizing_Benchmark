@@ -33,6 +33,30 @@ import os
 
 def ICCAD_evaluation_OpenROAD(designName: str, design: Design, timing: Timing):
   if check_validity_OpenROAD(designName, design, timing):
+    # Run Legalization
+    site = design.getBlock().getRows()[0].getSite()
+    max_disp_x = int(design.micronToDBU(0.1) / site.getWidth())
+    max_disp_y = int(design.micronToDBU(0.1) / site.getHeight())
+    print("###run legalization###")
+    design.getOpendp().detailedPlacement(max_disp_x, max_disp_y, "", False)
+    # Run Global Routing and Estimate Global Routing RC
+    signal_low_layer = design.getTech().getDB().getTech().findLayer("M1").getRoutingLevel()
+    signal_high_layer = design.getTech().getDB().getTech().findLayer("M7").getRoutingLevel()
+    clk_low_layer = design.getTech().getDB().getTech().findLayer("M1").getRoutingLevel()
+    clk_high_layer = design.getTech().getDB().getTech().findLayer("M7").getRoutingLevel()
+    grt = design.getGlobalRouter()
+    grt.clear()
+    grt.setAllowCongestion(True)
+    grt.setMinRoutingLayer(signal_low_layer)
+    grt.setMaxRoutingLayer(signal_high_layer)
+    grt.setMinLayerForClock(clk_low_layer)
+    grt.setMaxLayerForClock(clk_high_layer)
+    grt.setAdjustment(0.5)
+    grt.setVerbose(False)
+    print("###run global routing###")
+    grt.globalRoute(False)
+    design.evalTclString("estimate_parasitics -global_routing")
+    # Start Evaluation
     WNS, maxSlew, maxCap, totalLeakagePower = 0, 0, 0, 0
     # Penalties are subject to change
     WNSPenalty, maxSlewPenalty, maxCapPenalty = 1, 1, 1
