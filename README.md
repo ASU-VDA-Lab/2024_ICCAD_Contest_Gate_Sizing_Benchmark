@@ -98,7 +98,7 @@ make -j
 
 <instanceName>,<staticPower>
 ```
-("output_pin_cap" is the sum of the sink pins' capacitance. You can get it by subtracting the "total_cap" with "net_cap" from the net properties IR Table.)
+("output_pin_cap" is the sum of the sink pins' capacitance and the net capacitance.)
 
 ## Q&A
 - Q1: Does the cell library provide the area information?
