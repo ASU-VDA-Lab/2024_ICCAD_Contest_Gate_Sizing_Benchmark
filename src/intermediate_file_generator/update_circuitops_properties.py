@@ -75,7 +75,6 @@ def updated_dataframe_generate(filePath: str, design: str):
       pin_name, maxcap, maxtran, pin_tran, pin_slack = [], [], [], [], []
       pin_rise_arr, pin_fall_arr, input_pin_cap, output_pin_cap = [], [], [], []
       cell_name, cell_static_power = [], []
-      
       for inst in insts:
         pins = inst.getITerms()
         for pin in pins:
@@ -89,8 +88,8 @@ def updated_dataframe_generate(filePath: str, design: str):
               pin_slack.append(min(timing.getPinSlack(pin, timing.Fall, timing.Max), timing.getPinSlack(pin, timing.Rise, timing.Max)))
               pin_rise_arr.append(timing.getPinArrival(pin, timing.Rise))
               pin_fall_arr.append(timing.getPinArrival(pin, timing.Fall))
-              input_pin_cap.append(timing.getPortCap(pin, corner, timing.Max) if pin.isInputSignal() else "-1")
-              output_pin_cap.append(get_output_load_pin_cap(pin, corner, timing) if pin.isOutputSignal() else "-1")
+              input_pin_cap.append(timing.getPortCap(pin, corner, timing.Max) if pin.isInputSignal() else -1)
+              output_pin_cap.append(timing.getNetCap(pin.getNet(), corner, timing.Max) if pin.isOutputSignal() else -1)
         cell_name.append(inst.getName())
         cell_static_power.append(timing.staticPower(inst, corner))
       pin_table = pd.DataFrame({

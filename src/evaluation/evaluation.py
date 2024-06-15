@@ -55,6 +55,8 @@ def swap_libcell(filePath: str, design: Design):
 def ICCAD_evaluation(filePath: str, design: Design, timing: Timing):
   if check_validity(filePath, design, timing):
     if swap_libcell(filePath, design):
+      # We only have one corner in this contest
+      corner = timing.getCorners()[0]
       # Legalization
       site = design.getBlock().getRows()[0].getSite()
       max_disp_x = int(design.micronToDBU(0.1) / site.getWidth())
@@ -83,43 +85,53 @@ def ICCAD_evaluation(filePath: str, design: Design, timing: Timing):
       # Penalties are subject to change
       WNSPenalty, maxSlewPenalty, maxCapPenalty = 1, 1, 1
 
-      capLimit = 0
-      
+      capLimit, slewLimit = 0, 0
+      maxCapDiff, maxSlewDiff = 0, 0
       # Get all timing metrices
-      design.evalTclString("report_wns > evaluation_temp.txt")
-      with open ("evaluation_temp.txt", "r") as file:
+      design.evalTclString("report_wns > wns_evaluation_temp.txt")
+      with open ("wns_evaluation_temp.txt", "r") as file:
         for line in file:
           WNS = float(line.split()[1]) / 1000
-      design.evalTclString("report_check_types -max_cap > evaluation_temp.txt")
-      with open ("evaluation_temp.txt", "r") as file:
-        for line in file:
-          if len(line.split()) != 0:
-            maxCap = line
-        maxCap = float(maxCap.split()[2]) / 1000
-      design.evalTclString("report_check_types -max_slew > evaluation_temp.txt")
-      with open ("evaluation_temp.txt", "r") as file:
-        for line in file:
-          if len(line.split()) != 0:
-            maxSlew = line
-            capLimit = line
-        maxSlew = float(maxSlew.split()[2]) / 1000
-        capLimit = float(capLimit.split()[1]) / 1000
-      os.remove("evaluation_temp.txt")
-      # We only have one corner in this contest
-      corner = timing.getCorners()[0]
+      for pin_ in design.getBlock().getITerms():
+        if pin_.getNet() != None:
+          if pin_.getNet().getSigType() != 'POWER' and pin_.getNet().getSigType() != 'GROUND' and pin_.getNet().getSigType() != 'CLOCK':
+            library_cell_pin = [MTerm for MTerm in pin_.getInst().getMaster().getMTerms() if (pin_.getInst().getName() + "/" + MTerm.getName()) == pin_.getName()][0]       
+            if timing.getMaxSlewLimit(library_cell_pin) < timing.getPinSlew(pin_):
+              diff = abs(timing.getMaxSlewLimit(library_cell_pin) - timing.getPinSlew(pin_))
+              if diff > maxSlewDiff:
+                maxSlewDiff = diff
+                maxSlew = timing.getPinSlew(pin_, timing.Max) * 1000000000
+                slewLimit = timing.getMaxSlewLimit(library_cell_pin) * 1000000000
+            if pin_.isOutputSignal():
+              if timing.getMaxCapLimit(library_cell_pin) < timing.getNetCap(pin_.getNet(), corner, timing.Max):
+                diff = abs(timing.getMaxCapLimit(library_cell_pin) - timing.getNetCap(pin_.getNet(), corner, timing.Max))
+                if diff > maxCapDiff:
+                  maxCapDiff = diff
+                  maxCap = timing.getNetCap(pin_.getNet(), corner, timing.Max) * 1000000000000
+                  capLimit = timing.getMaxCapLimit(library_cell_pin) * 1000000000000
+
+      os.remove("wns_evaluation_temp.txt")
       for inst in design.getBlock().getInsts():
         totalLeakagePower += timing.staticPower(inst, corner)
       totalLeakagePower *= 1000000
       # Adjust penalties
       WNSPenalty = 0 if WNS >= 0.0 else WNSPenalty
-      maxSlewPenalty = 0 if 320 >= maxSlew else maxSlewPenalty
+      maxSlewPenalty = 0 if slewLimit >= maxSlew else maxSlewPenalty
       maxCapPenalty = 0 if capLimit >= maxCap else maxCapPenalty
       
       # Compute score
       score = totalLeakagePower + WNSPenalty * abs(WNS) + maxSlewPenalty * abs(maxSlew) + maxCapPenalty * abs(maxCap)
       print("===================================================")
-      print("WNS: %f ns, worst Slew: %f ns"%(WNS, maxSlew))
-      print("worst load capacitance: %f pF, total leakage power: %f uW"%(maxCap, totalLeakagePower)) 
+      print("WNS: %f ns"%(WNS))
+      if maxSlewPenalty != 0:
+        print("worst Slew: %f ns, Limit: %f ns"%(maxSlew, slewLimit))
+      else:
+        print("No slew violation")
+      if maxCapPenalty != 0:
+        print("worst load capacitance: %f pF, Limit: %f pF"%(maxCap, capLimit))
+      else:    
+        print("No load capacitance violation")
+      print("total leakage power: %f uW"%(totalLeakagePower)) 
       print("Score: %f"%score)
       print("===================================================")
 

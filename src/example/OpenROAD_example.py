@@ -136,8 +136,8 @@ Pin's output capacitance: %.25f
 Pin's maximum available output capacitance: %.25f
 -------------------------------"""%(
       design.getITermName(pin),
-      pin_tran_limit,
       pin_tran,
+      pin_tran_limit,
       pin_slack,
       pin_rise_arr,
       pin_fall_arr,
