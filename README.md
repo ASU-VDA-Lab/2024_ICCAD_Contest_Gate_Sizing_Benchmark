@@ -100,10 +100,6 @@ make -j
 ```
 ("output_pin_cap" is the sum of the sink pins' capacitance and the net capacitance.)
 
-## Q&A
-- Q1: Does the cell library provide the area information?
-- A1: Yes, you can find the area information in the lib files.
-
 
 
 
