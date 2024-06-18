@@ -7,7 +7,7 @@ Run the following command to run the example script to build the Labeled Propert
 - Add the path to the directory containing IR Tables with the "--path_IR" flag.
 - Add the path to the directory containing the LPG creation function using the "--path_LPG_gen_func" flag. The function is defined [*here*](https://github.com/NVlabs/CircuitOps/blob/main/src/python/generate_LPG_from_tables.py), and it takes the path to the IR Table as an argument.
 ```
-python3 CircuitOps_example.py --path_IR ../../../IR_Tables/NV_NVDLA_partition_m/ --path_LPG_gen_func ../../../CircuitOps/src/python/
+python3 CircuitOps_example.py --path_IR ../../IR_Tables/NV_NVDLA_partition_m/ --path_LPG_gen_func ../../CircuitOps/src/python/
 ```
 For more examples, please find [*NVlabs/CircuitOps/src/python*](https://github.com/NVlabs/CircuitOps/tree/main/src/python) and [*ASU-VDA-Lab/ASP-DAC24-Tutorial*](https://github.com/ASU-VDA-Lab/ASP-DAC24-Tutorial/tree/main).
 
