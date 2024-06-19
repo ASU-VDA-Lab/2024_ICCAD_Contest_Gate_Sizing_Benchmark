@@ -30,6 +30,7 @@ import openroad as ord
 from openroad import Tech, Design
 import os, odb
 from pathlib import Path
+from collections import defaultdict
 
 def load_design(design_name, verilog = False):
   tech = Tech()
@@ -94,4 +95,19 @@ def get_output_load_pin_cap(pin, corner, timing):
   else:
     return -1
 
+############################
+# Get a dict of equivcells #
+############################
+def build_libcell_dict(filename):
+  id_to_names = defaultdict(list)
+  with open(filename, "r") as file:
+    for line in file:
+      line = line.split(",")
+      id_to_names[line[1][:-1]].append(line[0])
+  
+  libcell_dict = dict()
+  for id, names in id_to_names.items():
+    for name in names:
+      libcell_dict[name] = names
 
+  return libcell_dict  
