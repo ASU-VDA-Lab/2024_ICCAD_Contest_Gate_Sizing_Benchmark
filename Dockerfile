@@ -22,11 +22,13 @@ RUN apt-get install -y python3-graph-tool
 RUN apt-get install -y vim
 RUN apt-get install -y python3-pip
 
-RUN pip install --no-cache-dir torch
-RUN pip install dgl
+RUN pip install --no-cache-dir torch==2.2.0
+RUN pip install dgl==2.1.0
 RUN pip install pycairo
 RUN pip install pandas
 RUN pip install scikit-learn
+RUN pip install numpy==1.24.4
+RUN pip install pydantic
 
 WORKDIR /app
 RUN git clone --recursive https://github.com/ASU-VDA-Lab/2024_ICCAD_Contest_Gate_Sizing_Benchmark.git
