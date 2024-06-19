@@ -28,11 +28,15 @@
 #OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from openroad import Design, Timing
-from .check_validity_OpenROAD import check_validity_OpenROAD
+from check_validity_OpenROAD import check_validity_OpenROAD
+import sys
 import os
 
-def ICCAD_evaluation_OpenROAD(designName: str, design: Design, timing: Timing):
-  if check_validity_OpenROAD(designName, design, timing):
+def ICCAD_evaluation_OpenROAD(designName: str, design: Design, timing: Timing, equivcell_file_path: str):
+  sys.path.append("../example/")
+  from OpenROAD_helper import build_libcell_dict
+  equivcell_dict = build_libcell_dict(equivcell_file_path)
+  if check_validity_OpenROAD(designName, design, timing, equivcell_dict):
     # We only have one corner in this contest
     corner = timing.getCorners()[0]
     # Run Legalization
@@ -101,14 +105,14 @@ def ICCAD_evaluation_OpenROAD(designName: str, design: Design, timing: Timing):
     print("===================================================")
     print("WNS: %f ns"%(WNS))
     if maxSlewPenalty != 0:
-      print("worst Slew: %f ns, Limit: %f ns"%(maxSlew, slewLimit))
+      print("Worst slew: %f ns, Limit: %f ns"%(maxSlew, slewLimit))
     else:
       print("No slew violation")
     if maxCapPenalty != 0:
-      print("worst load capacitance: %f pF, Limit: %f pF"%(maxCap, capLimit))
+      print("Worst load capacitance: %f pF, Limit: %f pF"%(maxCap, capLimit))
     else:
       print("No load capacitance violation")
-    print("total leakage power: %f uW"%(totalLeakagePower))
+    print("Total leakage power: %f uW"%(totalLeakagePower))
     print("Score: %f"%score)
     print("===================================================")
     

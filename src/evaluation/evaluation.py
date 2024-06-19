@@ -52,8 +52,8 @@ def swap_libcell(filePath: str, design: Design):
     inst.swapMaster(db.findMaster(changeTypeDict[inst.getName()]))
   return True
   
-def ICCAD_evaluation(filePath: str, design: Design, timing: Timing):
-  if check_validity(filePath, design, timing):
+def ICCAD_evaluation(filePath: str, design: Design, timing: Timing, equivcell_dict: dict):
+  if check_validity(filePath, design, timing, equivcell_dict):
     if swap_libcell(filePath, design):
       # We only have one corner in this contest
       corner = timing.getCorners()[0]
@@ -124,14 +124,14 @@ def ICCAD_evaluation(filePath: str, design: Design, timing: Timing):
       print("===================================================")
       print("WNS: %f ns"%(WNS))
       if maxSlewPenalty != 0:
-        print("worst Slew: %f ns, Limit: %f ns"%(maxSlew, slewLimit))
+        print("Worst slew: %f ns, Limit: %f ns"%(maxSlew, slewLimit))
       else:
         print("No slew violation")
       if maxCapPenalty != 0:
-        print("worst load capacitance: %f pF, Limit: %f pF"%(maxCap, capLimit))
+        print("Worst load capacitance: %f pF, Limit: %f pF"%(maxCap, capLimit))
       else:    
         print("No load capacitance violation")
-      print("total leakage power: %f uW"%(totalLeakagePower)) 
+      print("Total leakage power: %f uW"%(totalLeakagePower)) 
       print("Score: %f"%score)
       print("===================================================")
 
@@ -140,15 +140,16 @@ if __name__ == "__main__":
   parser.add_argument("--file_path", type = Path, default="./file", action = "store")
   parser.add_argument("--design_name", type = str, default="NaN", action = "store")
   parser.add_argument("--dump_def", default = False, action = "store_true")
+  parser.add_argument("--equivcell_file_path", type = str, default = "../../platform/ASAP7/libcell_id.csv")
   pyargs = parser.parse_args()
   
   sys.path.append("../example/")
-  from OpenROAD_helper import load_design
+  from OpenROAD_helper import load_design, build_libcell_dict
 
   tech, design = load_design(pyargs.design_name, False)
   timing = Timing(design)
-  
-  ICCAD_evaluation(pyargs.file_path, design, timing)
+  equivcell_dict = build_libcell_dict(pyargs.equivcell_file_path)
+  ICCAD_evaluation(pyargs.file_path, design, timing, equivcell_dict)
   
   if pyargs.dump_def:
     odb.write_def(design.getBlock(), "%s.def"%pyargs.design_name)

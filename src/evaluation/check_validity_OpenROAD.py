@@ -31,10 +31,10 @@ from openroad import Design, Timing
 import openroad as ord
 from collections import defaultdict
 
-def check_validity_OpenROAD(designName: str, design: Design, timing: Timing):
+def check_validity_OpenROAD(designName: str, design: Design, timing: Timing, equivcell_dict: dict):
   # Build original instance name : libcell type map
   correctTypeDict = defaultdict()
-  with open("../../design/%s"%designName, "r") as file:
+  with open("../../design/%s/%s.def"%(designName,designName), "r") as file:
     processLine = False
     skipNext = False
     terminateCounter = 0
@@ -55,26 +55,17 @@ def check_validity_OpenROAD(designName: str, design: Design, timing: Timing):
           skipNext = True
 
   # Start examine the correctness of the result
-  timing.makeEquivCells()
   db = ord.get_db()
   block = design.getBlock()
   for instName, libcellName in correctTypeDict.items():
     inst = block.findInst(instName)
     if inst == None:
       print("Error: Instance \"%s\" is not in your design."%instName)
-    correctMasters = timing.equivCells(db.findMaster(libcellName))
-    correct = False
-
+    correctMasters = equivcell_dict[libcellName] if not design.isSequential(inst.getMaster()) else [libcellName]
     masterName = inst.getMaster().getName()
-    for correctMaster in correctMasters:
-      if masterName == correctMaster.getName():
-        correct = True
-    if not correct:
+    if masterName not in correctMasters:
       correctMasters = ", ".join([correctMaster.getName() for correctMaster in correctMasters])
-      print("Error: Instance \"%s\" should be using the following library cells: %s, but found using: %s"%(instName, correctMasters, masterName))
+      print("Error: Instance \"%s\" should be using the following library cells: %s, but found intending to switch to: %s"%(instName, correctMasters, masterName))
       return False
   return True
-
-
-
 

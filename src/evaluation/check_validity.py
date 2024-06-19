@@ -31,7 +31,7 @@ from openroad import Design, Timing
 import openroad as ord
 from collections import defaultdict
 
-def check_validity(file_path: str, design: Design, timing: Timing):
+def check_validity(file_path: str, design: Design, timing: Timing, equivcell_dict: dict):
   # Build original instance name : libcell type map
   changeTypeDict = defaultdict()
   with open(file_path, "r") as file:
@@ -40,7 +40,6 @@ def check_validity(file_path: str, design: Design, timing: Timing):
       changeTypeDict[line[0]] = line[1]
 
   # Start examine the correctness of the result
-  timing.makeEquivCells()
   db = ord.get_db()
   block = design.getBlock()
   for instName, libcellName in changeTypeDict.items():
@@ -48,12 +47,8 @@ def check_validity(file_path: str, design: Design, timing: Timing):
     if inst == None:
       print("Error: Instance \"%s\" not found."%instName)
       return False
-    correctMasters = timing.equivCells(inst.getMaster())
-    correct = False
-    for master in correctMasters:
-      if master.getName() == libcellName:
-        correct = True
-    if not correct:
+    correctMasters = equivcell_dict[inst.getMaster().getName()] if not design.isSequential(inst.getMaster()) else [inst.getMaster().getName()]
+    if libcellName not in correctMasters:
       correctMasters = ", ".join([correctMaster.getName() for correctMaster in correctMasters])
       print("Error: Instance \"%s\" should be using the following library cells: %s, but found intending to switch to: %s"%(instName, correctMasters, libcellName))
       return False
