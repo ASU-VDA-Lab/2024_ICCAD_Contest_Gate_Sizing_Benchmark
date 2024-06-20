@@ -47,7 +47,7 @@ def check_validity(file_path: str, design: Design, timing: Timing, equivcell_dic
     if inst == None:
       print("Error: Instance \"%s\" not found."%instName)
       return False
-    correctMasters = equivcell_dict[inst.getMaster().getName()] if not design.isSequential(inst.getMaster()) else [inst.getMaster().getName()]
+    correctMasters = equivcell_dict[inst.getMaster().getName()] if not (design.isSequential(inst.getMaster()) or inst.getMaster().isBlock()) else [inst.getMaster().getName()]
     if libcellName not in correctMasters:
       correctMasters = ", ".join([correctMaster.getName() for correctMaster in correctMasters])
       print("Error: Instance \"%s\" should be using the following library cells: %s, but found intending to switch to: %s"%(instName, correctMasters, libcellName))
