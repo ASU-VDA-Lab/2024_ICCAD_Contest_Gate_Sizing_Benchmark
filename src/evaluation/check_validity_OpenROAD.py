@@ -61,7 +61,7 @@ def check_validity_OpenROAD(designName: str, design: Design, timing: Timing, equ
     inst = block.findInst(instName)
     if inst == None:
       print("Error: Instance \"%s\" is not in your design."%instName)
-    correctMasters = equivcell_dict[libcellName] if not design.isSequential(inst.getMaster()) else [libcellName]
+    correctMasters = equivcell_dict[libcellName] if not (design.isSequential(inst.getMaster()) or inst.getMaster().isBlock()) else [libcellName]
     masterName = inst.getMaster().getName()
     if masterName not in correctMasters:
       correctMasters = ", ".join([correctMaster.getName() for correctMaster in correctMasters])
