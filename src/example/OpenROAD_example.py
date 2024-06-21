@@ -87,6 +87,14 @@ inst = block.findInst("u_NV_NVDLA_cmac_u_core_u_mac_1_mul_124_55_g84957")
 print("-------------The instance we get-------------")
 print(inst.getName())
 
+#########################################################
+# Check if the instance is a macro or a sequential cell #
+#########################################################
+if design.isSequential(inst.getMaster()):
+  print("It's a sequential cell!")
+if inst.getMaster().isBlock():
+  print("It's a macro!")
+
 ###############################################################################
 # How to use the name of the library cell to get the library cell from OpenDB #
 ###############################################################################
