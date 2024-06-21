@@ -182,6 +182,10 @@ print("-----Library cells with different sizes-----")
 equiv_cells = timing.equivCells(inst_master)
 for equiv_cell in equiv_cells:
   print(equiv_cell.getName())
+
+# Reset the timing graph before performing gate sizing
+timing.resetTiming()
+
 # Perform gate sizing
 inst.swapMaster(equiv_cells[2])
 print("----Change to the following library cell----")
