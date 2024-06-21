@@ -3,4 +3,4 @@
 	url = https://github.com/NVlabs/CircuitOps/
 [submodule "OpenROAD"]
 	path = OpenROAD
-	url = https://github.com/bingyuew/OpenROAD/tree/cad_contest.git
+	url = https://github.com/bingyuew/OpenROAD.git
