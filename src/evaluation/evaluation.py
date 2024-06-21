@@ -52,15 +52,19 @@ def swap_libcell(filePath: str, design: Design):
     inst.swapMaster(db.findMaster(changeTypeDict[inst.getName()]))
   return True
   
-def ICCAD_evaluation(filePath: str, design: Design, timing: Timing, equivcell_dict: dict):
-  if check_validity(filePath, design, timing, equivcell_dict):
+def ICCAD_evaluation(filePath: str, design: Design, timing: Timing):
+  if check_validity(filePath, design, timing):
+    # We only have one corner in this contest
+    corner = timing.getCorners()[0]
+    leakageBeforeSwap = 0
+    for inst in design.getBlock().getInsts():
+      leakageBeforeSwap += timing.staticPower(inst, corner)
+    leakageBeforeSwap *= 1000000
     if swap_libcell(filePath, design):
-      # We only have one corner in this contest
-      corner = timing.getCorners()[0]
       # Legalization
       site = design.getBlock().getRows()[0].getSite()
-      max_disp_x = int(design.micronToDBU(0.1) / site.getWidth())
-      max_disp_y = int(design.micronToDBU(0.1) / site.getHeight())
+      max_disp_x = int((design.getBlock().getBBox().xMax() - design.getBlock().getBBox().xMin()) / site.getWidth())
+      max_disp_y = int((design.getBlock().getBBox().yMax() - design.getBlock().getBBox().yMin()) / site.getHeight())
       print("Legalizing...")
       design.getOpendp().detailedPlacement(max_disp_x, max_disp_y, "", False)
       # Global Route and Estimate Global Route RC
@@ -81,58 +85,51 @@ def ICCAD_evaluation(filePath: str, design: Design, timing: Timing, equivcell_di
       grt.globalRoute(False)
       design.evalTclString("estimate_parasitics -global_routing")
       # Start Evaluation
-      WNS, maxSlew, maxCap, totalLeakagePower = 0, 0, 0, 0
+      tns, slew, cap, leakage = 0, 0, 0, 0
       # Penalties are subject to change
-      WNSPenalty, maxSlewPenalty, maxCapPenalty = 1, 1, 1
+      tnsPenalty, slewPenalty, capPenalty = 10, 20, 20
 
-      capLimit, slewLimit = 0, 0
-      maxCapDiff, maxSlewDiff = 0, 0
       # Get all timing metrices
-      design.evalTclString("report_wns > wns_evaluation_temp.txt")
-      with open ("wns_evaluation_temp.txt", "r") as file:
+      design.evalTclString("report_tns > tns_evaluation_temp.txt")
+      with open ("tns_evaluation_temp.txt", "r") as file:
         for line in file:
-          WNS = float(line.split()[1]) / 1000
+          tns = float(line.split()[1]) / 1000
       for pin_ in design.getBlock().getITerms():
         if pin_.getNet() != None:
           if pin_.getNet().getSigType() != 'POWER' and pin_.getNet().getSigType() != 'GROUND' and pin_.getNet().getSigType() != 'CLOCK':
             library_cell_pin = [MTerm for MTerm in pin_.getInst().getMaster().getMTerms() if (pin_.getInst().getName() + "/" + MTerm.getName()) == pin_.getName()][0]       
             if timing.getMaxSlewLimit(library_cell_pin) < timing.getPinSlew(pin_):
-              diff = abs(timing.getMaxSlewLimit(library_cell_pin) - timing.getPinSlew(pin_))
-              if diff > maxSlewDiff:
-                maxSlewDiff = diff
-                maxSlew = timing.getPinSlew(pin_, timing.Max) * 1000000000
-                slewLimit = timing.getMaxSlewLimit(library_cell_pin) * 1000000000
+              diff = abs(timing.getMaxSlewLimit(library_cell_pin) - timing.getPinSlew(pin_)) * 1000000000
+              slew += diff
             if pin_.isOutputSignal():
               if timing.getMaxCapLimit(library_cell_pin) < timing.getNetCap(pin_.getNet(), corner, timing.Max):
-                diff = abs(timing.getMaxCapLimit(library_cell_pin) - timing.getNetCap(pin_.getNet(), corner, timing.Max))
-                if diff > maxCapDiff:
-                  maxCapDiff = diff
-                  maxCap = timing.getNetCap(pin_.getNet(), corner, timing.Max) * 1000000000000
-                  capLimit = timing.getMaxCapLimit(library_cell_pin) * 1000000000000
-
-      os.remove("wns_evaluation_temp.txt")
+                diff = abs(timing.getMaxCapLimit(library_cell_pin) - timing.getNetCap(pin_.getNet(), corner, timing.Max)) * 1000000000000000
+                cap += diff
+          
+      os.remove("tns_evaluation_temp.txt")
       for inst in design.getBlock().getInsts():
-        totalLeakagePower += timing.staticPower(inst, corner)
-      totalLeakagePower *= 1000000
+        leakage += timing.staticPower(inst, corner)
+      leakage *= 1000000
+      leakage -= leakageBeforeSwap
       # Adjust penalties
-      WNSPenalty = 0 if WNS >= 0.0 else WNSPenalty
-      maxSlewPenalty = 0 if slewLimit >= maxSlew else maxSlewPenalty
-      maxCapPenalty = 0 if capLimit >= maxCap else maxCapPenalty
-      
-      # Compute score
-      score = totalLeakagePower + WNSPenalty * abs(WNS) + maxSlewPenalty * abs(maxSlew) + maxCapPenalty * abs(maxCap)
+      tnsPenalty = 0 if tns >= 0.0 else tnsPenalty
+      slewPenalty = 0 if slew == 0 else slewPenalty
+      capPenalty = 0 if cap == 0 else capPenalty
+     
+      score = leakage + tnsPenalty * abs(tns) + slewPenalty * abs(slew) + capPenalty * abs(cap)
       print("===================================================")
-      print("WNS: %f ns"%(WNS))
-      if maxSlewPenalty != 0:
-        print("Worst slew: %f ns, Limit: %f ns"%(maxSlew, slewLimit))
+      print("TNS: %f ns"%(tns))
+      if slewPenalty != 0:
+        print("Total slew violation difference: %f ns"%(slew))
       else:
         print("No slew violation")
-      if maxCapPenalty != 0:
-        print("Worst load capacitance: %f pF, Limit: %f pF"%(maxCap, capLimit))
-      else:    
+      if capPenalty != 0:
+        print("Total load capacitance violation difference: %f fF"%(cap))
+      else:
         print("No load capacitance violation")
-      print("Total leakage power: %f uW"%(totalLeakagePower)) 
+      print("Leakage power difference: %f uW"%(leakage))
       print("Score: %f"%score)
+      print("Require runtime in official score calculation")
       print("===================================================")
 
 if __name__ == "__main__":
@@ -140,16 +137,14 @@ if __name__ == "__main__":
   parser.add_argument("--file_path", type = Path, default="./file", action = "store")
   parser.add_argument("--design_name", type = str, default="NaN", action = "store")
   parser.add_argument("--dump_def", default = False, action = "store_true")
-  parser.add_argument("--equivcell_file_path", type = str, default = "../../platform/ASAP7/libcell_id.csv")
   pyargs = parser.parse_args()
   
   sys.path.append("../example/")
-  from OpenROAD_helper import load_design, build_libcell_dict
+  from OpenROAD_helper import load_design
 
   tech, design = load_design(pyargs.design_name, False)
   timing = Timing(design)
-  equivcell_dict = build_libcell_dict(pyargs.equivcell_file_path)
-  ICCAD_evaluation(pyargs.file_path, design, timing, equivcell_dict)
+  ICCAD_evaluation(pyargs.file_path, design, timing)
   
   if pyargs.dump_def:
     odb.write_def(design.getBlock(), "%s.def"%pyargs.design_name)

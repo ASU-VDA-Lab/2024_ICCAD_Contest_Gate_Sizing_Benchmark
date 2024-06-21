@@ -31,7 +31,7 @@ from openroad import Design, Timing
 import openroad as ord
 from collections import defaultdict
 
-def check_validity_OpenROAD(designName: str, design: Design, timing: Timing, equivcell_dict: dict):
+def check_validity_OpenROAD(designName: str, design: Design, timing: Timing):
   # Build original instance name : libcell type map
   correctTypeDict = defaultdict()
   with open("../../design/%s/%s.def"%(designName,designName), "r") as file:
@@ -46,26 +46,22 @@ def check_validity_OpenROAD(designName: str, design: Design, timing: Timing, equ
         terminateCounter += 1
         continue
       if processLine:
-        if skipNext:
-          skipNext = False
-          continue
-        else:
-          line = line.split()
-          correctTypeDict[line[1]] = line[2]
-          skipNext = True
+        line = line.split()
+        correctTypeDict[line[1]] = line[2]
 
   # Start examine the correctness of the result
   db = ord.get_db()
   block = design.getBlock()
+  timing.makeEquivCells()
   for instName, libcellName in correctTypeDict.items():
     inst = block.findInst(instName)
     if inst == None:
       print("Error: Instance \"%s\" is not in your design."%instName)
-    correctMasters = equivcell_dict[libcellName] if not (design.isSequential(inst.getMaster()) or inst.getMaster().isBlock()) else [libcellName]
+    correctMasters = timing.equivCells(db.findMaster(libcellName)) if not (design.isSequential(db.findMaster(libcellName)) or db.findMaster(libcellName).isBlock()) else [db.findMaster(libcellName)]
     masterName = inst.getMaster().getName()
-    if masterName not in correctMasters:
+    if masterName not in [correctMaster.getName() for correctMaster in correctMasters]:
       correctMasters = ", ".join([correctMaster.getName() for correctMaster in correctMasters])
       print("Error: Instance \"%s\" should be using the following library cells: %s, but found intending to switch to: %s"%(instName, correctMasters, masterName))
-      return False
-  return True
+      return False, correctTypeDict
+  return True, correctTypeDict
 

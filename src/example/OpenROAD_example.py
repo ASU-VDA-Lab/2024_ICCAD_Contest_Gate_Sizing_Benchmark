@@ -35,7 +35,6 @@ import argparse
 
 parser = argparse.ArgumentParser(description = "parsing the name of the benchmark")
 parser.add_argument("--design_name", type = str, default = "NV_NVDLA_partition_m")
-parser.add_argument("--equivcell_file_path", type = str, default = "../../platform/ASAP7/libcell_id.csv")
 pyargs = parser.parse_args()
 ##############################################
 # Load the design using OpenROAD Python APIs #
@@ -172,7 +171,7 @@ Internal power + switching power: %.25f
 ##############################
 # How to perform gate sizing #
 ##############################
-equivcell_dict = build_libcell_dict(pyargs.equivcell_file_path)
+timing.makeEquivCells()
 # First pick an instance
 inst = block.findInst("u_NV_NVDLA_cmac_u_core_u_mac_1_mul_124_55_g84957")
 # Then get the library cell information
@@ -180,11 +179,13 @@ inst_master = inst.getMaster()
 print("-----------Reference library cell-----------")
 print(inst_master.getName())
 print("-----Library cells with different sizes-----")
-equiv_cells = equivcell_dict[inst_master.getName()]
+equiv_cells = timing.equivCells(inst_master)
 for equiv_cell in equiv_cells:
-  print(equiv_cell)
+  print(equiv_cell.getName())
 # Perform gate sizing
-inst.swapMaster(db.findMaster(equiv_cells[0]))
+inst.swapMaster(equiv_cells[2])
+print("----Change to the following library cell----")
+print(inst.getMaster().getName())
 
 #####################################
 # Perform Legalization after sizing #
