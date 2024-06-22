@@ -65,22 +65,22 @@ cmake ..
 make -j
 ```
 ## Benchmark Statistics
-|        design        |   gate count   |    WNS (ns)   |    TNS (ns)   |worst slew (ns)|max load C (pF)| total leakage (uW)|
+|        Design        |   Gate Count   |    WNS (ns)   |    TNS (ns)   |Total Slew Violation Difference (ns)|Total Load Capacitance Violation Difference (fF)| Total Leakage (uW)|
 |:--------------------:|---------------:|--------------:|--------------:|--------------:|--------------:|--------------:|
-| NV_NVDLA_partition_m | 27,553| -0.595|    -156.323| 1.135| 0.061|      1.672|
-| NV_NVDLA_partition_p | 79,919| -1.619|   -8,423.53| 1.627| 0.087|      5.539|
-| ariane136            |145,776| -1.298| -10,143.711|  1.44| 0.072| 17,539.095|
-| mempool_tile_wrap    |187,851| -1.56 | -12,697.547| 1.472| 0.072|  2,590.158|
+| NV_NVDLA_partition_m | 27,553| -0.595|    -156.323|   258.761|    256|      1.672|
+| NV_NVDLA_partition_p | 79,919| -1.519|   -6,306.64| 6,125.512|  5,292|      5.539|
+| ariane136            |145,776| -1.298| -10,143.711|14,843.895| 15,463| 17,539.095|
+| mempool_tile_wrap    |187,851| -1.56 | -12,697.547|12,053.291| 10,779|  2,590.158|
 
 (Reported by OpenSTA)
 
 ## Reference Sizing Result Statistics
-|        design        |   gate count   |    WNS (ns)   |    TNS (ns)   |worst slew (ns)|max load C (pF)| total leakage (uW)|
-|:--------------------:|---------------:|--------------:|--------------:|--------------:|--------------:|--------------:|
-| NV_NVDLA_partition_m | 27,553| -0.207|  -10.266|    NA|    NA|     2.693|
-| NV_NVDLA_partition_p | 79,919| -0.226| -125.452| 0.357|    NA|     6.635|
-| ariane136            |145,776| -0.214|  -27.613|  0.66|    NA| 17,545.15|
-| mempool_tile_wrap    |187,851| -0.199|   -1.232| 0.857| 0.036|  2,594.44|
+|        Design        |   Gate Count   |    WNS (ns)   |    TNS (ns)   |Total Slew Violation Difference (ns)|Total Load Capacitance Violation Difference (fF)| Total Leakage (uW)| Runtime (s) |
+|:--------------------:|---------------:|--------------:|--------------:|--------------:|--------------:|--------------:|--------------:|
+| NV_NVDLA_partition_m | 27,553| -0.207|  -10.266|    NA|    NA|     2.693| 11|
+| NV_NVDLA_partition_p | 79,919| -0.126|  -17.899| 0.074|    NA|     6.635|254|
+| ariane136            |145,776| -0.214|  -27.613|23.713|    NA| 17,545.15|573|
+| mempool_tile_wrap    |187,851| -0.199|   -1.232|42.162|    44|  2,594.44|489|
 
 (Reported by OpenSTA)
 
