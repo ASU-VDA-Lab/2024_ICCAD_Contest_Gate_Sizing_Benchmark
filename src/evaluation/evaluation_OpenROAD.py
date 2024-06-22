@@ -37,6 +37,8 @@ def ICCAD_evaluation_OpenROAD(designName: str, design: Design, timing: Timing):
   if passing:  
     # We only have one corner in this contest
     corner = timing.getCorners()[0]
+    # Reset the Timing network
+    timing.resetTiming()
     # Run Legalization
     site = design.getBlock().getRows()[0].getSite()
     max_disp_x = int((design.getBlock().getBBox().xMax() - design.getBlock().getBBox().xMin()) / site.getWidth())
