@@ -48,8 +48,9 @@ sudo apt-get update
 sudo apt-get install -y python3-graph-tool
 sudo apt-get update && apt-get install -y gnupg2 ca-certificates
 sudo apt-get install -y python3-pip
-pip3 install torch
-pip3 install dgl
+pip3 install torch==2.2.0
+pip3 install numpy==1.24.4
+pip3 install dgl==2.1.0
 pip3 install pycairo
 pip3 install pandas
 pip3 install scikit-learn
