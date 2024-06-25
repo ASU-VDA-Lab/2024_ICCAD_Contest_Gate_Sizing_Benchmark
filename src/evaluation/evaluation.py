@@ -60,6 +60,7 @@ def ICCAD_evaluation(filePath: str, design: Design, timing: Timing):
     for inst in design.getBlock().getInsts():
       leakageBeforeSwap += timing.staticPower(inst, corner)
     leakageBeforeSwap *= 1000000
+    timing.resetTiming()
     if swap_libcell(filePath, design):
       # Legalization
       site = design.getBlock().getRows()[0].getSite()
