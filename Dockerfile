@@ -9,15 +9,24 @@ RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-key 612DEFB798507F25
 RUN apt-get update
 
 RUN apt-get install -y git
-RUN apt-get install -y gcc g++
+RUN apt-get install -y software-properties-common
+RUN add-apt-repository ppa:ubuntu-toolchain-r/test -y
+RUN apt-get update
+RUN apt-get install -y gcc-11 g++-11
+RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-11 100
+RUN update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-11 100
+
 RUN apt-get install -y libpython-all-dev
 RUN apt-get install -y libboost-all-dev
 RUN apt-get install -y libcairo2
 RUN apt-get install -y libcairo2-dev
 RUN apt-get install -y python3-matplotlib
-RUN apt-get install -y nvidia-cuda-toolkit
 RUN apt-get update
 RUN apt-get install -y python3-graph-tool
+
+RUN apt-get -y purge nvidia*
+RUN apt remove -y nvidia-*
+RUN apt-get -y autoremove
 
 RUN apt-get install -y vim
 RUN apt-get install -y python3-pip
@@ -41,6 +50,3 @@ RUN cmake ..
 RUN make -j 6
 
 WORKDIR /app
-
-
-COPY . /app
