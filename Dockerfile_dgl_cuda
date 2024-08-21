@@ -40,6 +40,7 @@ RUN pip install scikit-learn
 RUN pip install numpy==1.24.4
 RUN pip install pydantic
 RUN pip install pyyaml
+RUN pip install torchdata==0.7.1
 
 ENV DGLBACKEND="pytorch"
 
