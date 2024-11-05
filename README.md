@@ -3,7 +3,7 @@ This GitHub repository has the public benchmarks for the 2024 ICCAD CAD Contest 
 
 
 ## Table of Content
-  - [*ICCAD_Contest_Problem_C.pdf*](./ICCAD_Contest_Problem_C.pdf): Contest Description
+  - [*ICCAD_Contest_Problem_C.pdf*](./ICCAD_Contest_Problem_C.pdf): Contest description.
   - [*IR_Tables*](./IR_Tables): Design data in CircuitOps IR tables format, units are in farad (F), Ohm (Ω), and second (s).
   - [*design*](./design): Design netlist, post-placement DEF, SDC, and reference .size output file.
   - [*platform/ASAP7*](./platform/ASAP7): ASAP7 cell library for the designs.
