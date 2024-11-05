@@ -114,6 +114,13 @@ make -j
 ```
 ("output_pin_cap" is the sum of the sink pins' capacitance and the net capacitance.)
 
+## Cite this work
+```
+\bibitem{cadcontest24}
+B.-Y. Wu, R. Liang, G. Pradipta, A. Agnesina, H. Ren and V. A. Chhabria,  
+``2024 ICCAD CAD Contest Problem C: Scalable Logic Gate Sizing Using ML Techniques and GPU Acceleration'',
+{\em Proc. ICCAD}, 2024.
+```
 
 
 
